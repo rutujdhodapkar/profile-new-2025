@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About -Rutuj Dhodapkar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Krona One', Arial, sans-serif;
+      background: #000000;
+      color: #fff;
+      min-height: 100vh;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      /* Add top margin to shift all sections down */
+      margin-top: 60px;
+    }
+    section {
+      flex: 1 0 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      overflow: hidden !important;
+      position: relative;
+      /* Add top margin to shift each section down a bit (optional, can be removed if .container margin-top is enough) */
+      /* margin-top: 40px; */
+    }
+    h2 {
+      font-size: 2rem;
+      margin-top: 32px;
+      margin-bottom: 18px;
+      letter-spacing: 1.5px;
+      color: #ffeb3b;
+      z-index: 2;
+    }
+    .iframe-container {
+      width: 100vw;
+      height: calc(100vh - 80px);
+      border-radius: 0;
+      overflow: hidden;
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
+      flex: 1 1 0;
+      display: flex;
+    }
+    /* Add space above info.html iframe */
+    .iframe-container.space-above {
+      margin-top: 40px;
+    }
+    /* Add space below project section.html iframe */
+    .iframe-container.space-below {
+      margin-bottom: 40px;
+    }
+    iframe {
+      width: 100vw;
+      height: 100%;
+      min-height: 0;
+      border: none;
+      background: none;
+      display: block;
+      flex: 1 1 0;
+    }
+    /* Removed #moving-circle styles */
+    @media (max-width: 900px) {
+      h2 {
+        margin-top: 18px;
+      }
+      .iframe-container {
+        height: calc(100vh - 60px);
+      }
+      .iframe-container.space-above {
+        margin-top: 24px;
+      }
+      .iframe-container.space-below {
+        margin-bottom: 24px;
+      }
+    }
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.3rem;
+        margin-top: 10px;
+      }
+      .iframe-container {
+        height: calc(100vh - 40px);
+      }
+      .iframe-container.space-above {
+        margin-top: 12px;
+      }
+      .iframe-container.space-below {
+        margin-bottom: 12px;
+      }
+    }
+    /* Style for the extra skills iframe */
+    .skills-extra-iframe-container {
+      width: 100vw;
+      max-width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: none;
+      border: none;
+      margin: 0;
+      padding: 0;
+      height: auto;
+      min-height: 0;
+    }
+    .skills-extra-iframe-container iframe {
+      width: 100vw;
+      min-width: 0;
+      max-width: 100vw;
+      height: 220px;
+      min-height: 180px;
+      border: none;
+      background: none;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    @media (max-width: 900px) {
+      .skills-extra-iframe-container iframe {
+        height: 180px;
+      }
+    }
+    @media (max-width: 600px) {
+      .skills-extra-iframe-container iframe {
+        height: 120px;
+      }
+    }
+
+    /* Navigation Container with smooth transition and initial hidden state */
+    #rectiangleNavbar {
+      position: absolute; /* Start as absolute, then switch to fixed */
+      left: 50%;
+      transform: translateX(-50%);
+      width: fit-content;
+      padding: 10px 20px;
+      background: #ffffff;
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 200px;
+      z-index: 9999;
+      transition: 
+        opacity 0.7s cubic-bezier(.4,0,.2,1),
+        filter 0.7s cubic-bezier(.4,0,.2,1),
+        all 0.5s ease-in-out;
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(18px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #rectiangleNavbar.navbar-visible {
+      opacity: 1;
+      pointer-events: auto;
+      filter: blur(0);
+    }
+
+    /* Hide navigation on small screens */
+    @media only screen and (max-width: 768px) {
+      #rectiangleNavbar {
+        display: none;
+      }
+      #blogs-btn-container {
+        display: none !important;
+      }
+    }
+
+    /* Navigation list */
+    #rectiangleNavbar .page-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+
+    #rectiangleNavbar .page-nav li {
+      cursor: pointer;
+      padding: 8px 15px;
+      transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Added transform transition */
+      border-radius: 50px;
+      position: relative;
+    }
+
+    /* Light theme text color */
+    body:not(.dark-mode) #rectiangleNavbar .page-nav li {
+      color: #000000;
+    }
+
+    /* Dark theme text color */
+    body.dark-mode #rectiangleNavbar .page-nav li {
+      color: white;
+    }
+
+    #rectiangleNavbar .page-nav li:hover {
+      background-color: #fbfbfba4;
+      color: white;
+      transform: scale(1.1); /* Slightly enlarge on hover */
+    }
+
+    /* New Highlight Element */
+    .highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #5b5b5b69;
+      transition: left 0.5s ease, width 0.5s ease; /* Smooth slide transition */
+      border-radius: 50px;
+      z-index: -1; /* Ensure highlight is behind text */
+    }
+
+    /* Remove underlines from navigation links */
+    #rectiangleNavbar a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Blogs Button Styles */
+    #blogs-btn-container {
+      margin-left: 24px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    #blogs-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 22px 7px 18px;
+      border: 2px solid rgba(0, 0, 0, 0.7);
+      background: rgba(255,255,255,0.08);
+      color: #000000;
+      border-radius: 40px;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 
+        background 0.2s,
+        border-color 0.2s,
+        color 0.2s,
+        box-shadow 0.2s;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+      outline: none;
+      position: relative;
+      z-index: 10;
+      user-select: none;
+    }
+    #blogs-btn:hover, #blogs-btn:focus {
+      background: rgba(255,255,255,0.18);
+      border-color: #000000;
+      color: #222;
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+    }
+    #blogs-btn .arrow {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-left: 2px;
+      vertical-align: middle;
+      transition: transform 0.2s;
+    }
+    #blogs-btn .arrow svg path {
+      stroke: #000 !important;
+    }
+    #blogs-btn:hover .arrow {
+      transform: translateX(4px) scale(1.08);
+    }
+    @media (max-width: 900px) {
+      #blogs-btn {
+        font-size: 0.95rem;
+        padding: 6px 16px 6px 12px;
+      }
+      #blogs-btn .arrow {
+        width: 15px;
+        height: 15px;
+      }
+    }
+    @media (max-width: 600px) {
+      #blogs-btn {
+        font-size: 0.85rem;
+        padding: 5px 10px 5px 8px;
+      }
+      #blogs-btn .arrow {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    /* Basic page styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Add extra space below the last section */
+    .extra-bottom-space {
+      width: 100vw;
+      height: 120px;
+      min-height: 80px;
+      background: none;
+      border: none;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    @media (max-width: 600px) {
+      .extra-bottom-space {
+        height: 60px;
+        min-height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div id="rectiangleNavbar" class="rectriangle">
+    <nav class="page-nav">
+      <ul>
+        <li data-section="home"><a href="#home" id="home-nav-link"><strong>Home</strong></a></li>
+        <li data-section="about"><a href="#about"><strong>About</strong></a></li>
+        <li data-section="skills"><a href="#skills"><strong>Skills</strong></a></li>
+        <li data-section="certificates"><a href="#certificates"><strong>Certificates</strong></a></li>
+        <li data-section="projects"><a href="#projects"><strong>Projects</strong></a></li>
+        <li data-section="contact"><a href="#contact" id="contact-nav-link"><strong>Contact</strong></a></li>
+        <div class="highlight"></div>
+      </ul>
+    </nav>
+    <!-- Blogs Button at right side of navbar -->
+    <div id="blogs-btn-container">
+      <button id="blogs-btn" type="button" title="Go to Blogs">
+        Research
+        <span class="arrow">
+          <!-- SVG right arrow -->
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" 
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 3L12 9L6 15" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div class="container">
+    <section id="about">
+      <div class="iframe-container space-above">
+        <iframe src="info.html" title="About Page" scrolling="no"></iframe>
+      </div>
+    </section>
+    <section id="skills">
+      <!-- Show skill.html above skill section.html -->
+      <div class="skills-extra-iframe-container">
+        <iframe src="skill.html" title="Skill Squares" scrolling="no"></iframe>
+      </div>
+      <div class="iframe-container">
+        <iframe src="skill section.html" title="Skill Section Page" scrolling="no"></iframe>
+      </div>
+    </section>
+    <!-- Insert certificate section above project section -->
+    <section id="certificates">
+      <div class="iframe-container">
+        <iframe src="certificate.html" title="Certificates Page" scrolling="no"></iframe>
+      </div>
+    </section>
+    <section id="projects">
+      <div class="iframe-container space-below">
+        <iframe src="project section.html" title="Project Selection Page" scrolling="no"></iframe>
+      </div>
+    </section>
+    <div class="extra-bottom-space"></div>
+  </div>
+  <script>
+    // Function to check if "data.csv" is accessible
+    function checkDataFile() {
+      fetch('data.csv', { method: 'HEAD' })
+        .then(response => {
+          if (!response.ok) {
+            window.location.href = 'error.html';
+          }
+        })
+        .catch(() => {
+          window.location.href = 'error.html';
+        });
+    }
+
+    // Call the function to check the data file
+    checkDataFile();
+
+    // Prevent mouse wheel and touch scroll inside the iframes
+    document.querySelectorAll('iframe').forEach(function(iframe) {
+      iframe.addEventListener('wheel', function(e) {
+        e.preventDefault();
+      });
+      iframe.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+      });
+    });
+
+    // Make each section take up the full viewport and allow vertical scroll between them
+    // (Optional: smooth scroll between sections)
+    document.body.style.overflowY = "auto";
+    document.body.style.overflowX = "hidden";
+    document.querySelector('.container').style.height = "auto";
+    document.querySelectorAll('section').forEach(function(section) {
+      section.style.minHeight = "100vh";
+      section.style.height = "100vh";
+    });
+
+    // Navigation highlight and sticky logic (from header.html)
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show navbar after 1 second with blur-out effect
+      setTimeout(function() {
+        var navbar = document.getElementById('rectiangleNavbar');
+        if (navbar) {
+          navbar.classList.add('navbar-visible');
+        }
+      }, 1000);
+
+      // Home nav: redirect to Main.html
+      var homeNavLink = document.getElementById('home-nav-link');
+      if (homeNavLink) {
+        homeNavLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = "Main.html";
+        });
+      }
+
+      // Contact nav: redirect to contact.html
+      var contactNavLink = document.getElementById('contact-nav-link');
+      if (contactNavLink) {
+        contactNavLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = "contact.html";
+        });
+      }
+
+      // Blogs button: redirect to researchrutujdhodapkar.vercel.app
+      var blogsBtn = document.getElementById('blogs-btn');
+      if (blogsBtn) {
+        blogsBtn.addEventListener('click', function() {
+          window.open('https://researchrutujdhodapkar.vercel.app/', '_blank');
+        });
+      }
+
+      if (window.innerWidth > 768) {
+        const navbar = document.getElementById('rectiangleNavbar');
+        const aboutSection = document.getElementById('about'); // About section
+        const sections = document.querySelectorAll("section"); // All sections
+        const navItems = document.querySelectorAll("#rectiangleNavbar .page-nav li");
+        const highlight = document.querySelector("#rectiangleNavbar .highlight");
+        const stickyOffset = 25; // Stick at 25px from the top
+
+        // 🔥 **Key Fix: Setting Navbar Exactly Above About Section**
+        function getInitialOffset() {
+          return aboutSection.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 20;
+        }
+
+        let initialOffset = getInitialOffset(); // Set on load
+
+        // Set navbar position correctly from the start
+        navbar.style.position = 'absolute';
+        navbar.style.top = `${initialOffset}px`;
+
+        function updateNavbarPosition() {
+          if (window.scrollY >= initialOffset) {
+            navbar.style.position = 'fixed';
+            navbar.style.top = `${stickyOffset}px`;
+            navbar.style.opacity = '1'; // Ensure full opacity when fixed
+          } else {
+            navbar.style.position = 'absolute';
+            navbar.style.top = `${initialOffset}px`;
+            navbar.style.opacity = '0.8'; // Slightly transparent when absolute
+          }
+        }
+
+        window.addEventListener('scroll', updateNavbarPosition);
+        window.addEventListener('resize', () => {
+          initialOffset = getInitialOffset(); // Update on resize
+          updateNavbarPosition();
+        });
+
+        updateNavbarPosition(); // Run once on load
+
+        // 🎯 **Smooth Scroll Fix and Highlight Active Section**
+        navItems.forEach(item => {
+          item.addEventListener("click", function(event) {
+            // If this is the Home or Contact nav, let the above handler take over
+            if (this.getAttribute("data-section") === "home" || this.getAttribute("data-section") === "contact") {
+              return;
+            }
+            event.preventDefault();
+            const targetId = this.getAttribute("data-section");
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+              targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            // Highlight the active section
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            updateHighlight();
+          });
+        });
+
+        // Highlight the current section on scroll
+        window.addEventListener('scroll', function() {
+          let currentSection = '';
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop - 50;
+            if (window.scrollY >= sectionTop) {
+              currentSection = section.getAttribute('id');
+            }
+          });
+          navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-section') === currentSection) {
+              item.classList.add('active');
+            }
+          });
+          updateHighlight();
+        });
+
+        function updateHighlight() {
+          const activeItem = document.querySelector("#rectiangleNavbar .page-nav li.active");
+          if (activeItem) {
+            const { offsetLeft, offsetWidth, offsetHeight } = activeItem;
+            highlight.style.left = `${offsetLeft}px`;
+            highlight.style.width = `${offsetWidth}px`;
+            highlight.style.height = `${offsetHeight}px`; // Adjust height to cover full text as a box
+          }
+        }
+
+        updateHighlight(); // Initial highlight position
+      }
+
+    });
+
+
+  </script>
+
+  <!-- ---------------------scroll up/down animation-------------------- -->
+<script>
+let lastScrollY = window.scrollY;
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.scrollY;
+
+  // If scrolling up AND already at the top
+  if (currentScroll < lastScrollY && currentScroll === 0) {
+    // Show white overlay animation before redirecting to Main.html
+    // Create overlay if not already present
+    let whiteOverlay = document.getElementById('whiteScrollUpOverlay');
+    if (!whiteOverlay) {
+      whiteOverlay = document.createElement('div');
+      whiteOverlay.id = 'whiteScrollUpOverlay';
+      whiteOverlay.style.position = 'fixed';
+      whiteOverlay.style.top = '0';
+      whiteOverlay.style.left = '0';
+      whiteOverlay.style.width = '100vw';
+      whiteOverlay.style.height = '100vh';
+      whiteOverlay.style.background = '#fff';
+      whiteOverlay.style.zIndex = '99999';
+      whiteOverlay.style.opacity = '0';
+      whiteOverlay.style.transition = 'opacity 0.5s cubic-bezier(.6,0,.4,1)';
+      document.body.appendChild(whiteOverlay);
+      // Force reflow to ensure transition
+      void whiteOverlay.offsetWidth;
+    }
+    // Animate overlay in
+    whiteOverlay.style.opacity = '1';
+
+    // After animation, redirect
+    setTimeout(() => {
+      window.location.href = "Main.html";
+    }, 500); // match transition duration
+  }
+
+  lastScrollY = currentScroll;
+});
+
+// Detect scroll down at bottom to open contact.html, but show animation first
+let lastScrollYForBottom = window.scrollY;
+let circleAnimStarted = false;
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const viewportHeight = window.innerHeight;
+  const docHeight = Math.max(
+    document.body.scrollHeight, document.documentElement.scrollHeight,
+    document.body.offsetHeight, document.documentElement.offsetHeight,
+    document.body.clientHeight, document.documentElement.clientHeight
+  );
+
+  // If at (or very near) bottom and scrolling down
+  if (
+    scrollY + viewportHeight >= docHeight - 2 && // allow 2px leeway
+    scrollY > lastScrollYForBottom // scrolling down
+  ) {
+    // Prevent multiple triggers
+    if (circleAnimStarted) return;
+    circleAnimStarted = true;
+
+    // Create the circle animation element directly (not iframe)
+    const circle = document.createElement('div');
+    circle.className = 'circle-scroll-anim';
+    document.body.appendChild(circle);
+
+    // Add styles for the animation (if not already present)
+    if (!document.getElementById('circle-scroll-anim-style')) {
+      const style = document.createElement('style');
+      style.id = 'circle-scroll-anim-style';
+      style.textContent = `
+        .circle-scroll-anim {
+          position: fixed;
+          left: 50%;
+          bottom: 0;
+          width: 80px;
+          height: 80px;
+          background: #fff;
+          border-radius: 50%;
+          opacity: 1;
+          box-shadow: 0 0 20px 0 #fff8;
+          transform: translateX(-50%) scale(0.8);
+          z-index: 9999;
+          animation: circle-pop-in-scroll 1.2s cubic-bezier(.7,1.6,.4,1) forwards;
+          pointer-events: none;
+        }
+        .circle-scroll-anim.cover {
+          animation: circle-expand-full-bottom-scroll 1.1s cubic-bezier(.7,1.6,.4,1) forwards;
+        }
+        @keyframes circle-pop-in-scroll {
+          0% {
+            opacity: 0.7;
+            transform: translateX(-50%) scale(0.8);
+          }
+          60% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.08);
+          }
+          80% {
+            transform: translateX(-50%) scale(0.98);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+        }
+        @keyframes circle-expand-full-bottom-scroll {
+          0% {
+            width: 80px;
+            height: 80px;
+            left: 50%;
+            bottom: 0;
+            border-radius: 50%;
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+          }
+          80% {
+            width: 260vw;
+            height: 260vw;
+            left: 50%;
+            bottom: calc(-130vw + 40px);
+            border-radius: 50%;
+            transform: translateX(-50%) scale(1.05);
+            opacity: 1;
+          }
+          100% {
+            width: 260vw;
+            height: 260vw;
+            left: 50%;
+            bottom: calc(-130vw + 40px);
+            border-radius: 50%;
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // After the pop-in, trigger the cover animation, then redirect
+    setTimeout(() => {
+      circle.classList.add('cover');
+      // After the cover animation, redirect
+      setTimeout(() => {
+        window.location.href = "contact.html";
+      }, 1100); // match the cover animation duration
+    }, 1200); // match the pop-in animation duration
+  }
+
+  lastScrollYForBottom = scrollY;
+});
+
+</script>
+</body>
+
+
+<!-- -----------------------------------------------right click menu----------------------------------------------- -->
+
+<!-- Custom Right Click Menu HTML and CSS -->
+<style>
+  @font-face {
+    font-family: 'BitmapFont';
+    src: url('BitmapFont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  #customContextMenu {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    background: #fff;
+    color: #232323;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    min-width: 90px;
+    font-family: 'BitmapFont', Arial, sans-serif;
+    padding: 3px 4px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.18s 0.12s, width 0.32s cubic-bezier(.4,1.4,.6,1), height 0.32s cubic-bezier(.4,1.4,.6,1);
+    width: auto;
+    height: auto;
+    font-size: 0.82em;
+  }
+  #customContextMenu .menu-item {
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    user-select: none;
+    color: #232323;
+    border-radius: 8px;
+    margin: 3px 0;
+    font-size: 0.92em;
+    font-family: 'BitmapFont', Arial, sans-serif;
+  }
+  #customContextMenu .menu-item:hover {
+    background: #f0f0f0;
+    color: #727272;
+  }
+  #customContextMenu .menu-separator {
+    height: 1px;
+    background: linear-gradient(90deg, #e0e0e0 0%, #f5f5f5 100%);
+    margin: 4px 0;
+    border: none;
+    border-radius: 8px;
+  }
+
+  /* Square blur animation - blur only inside the square */
+  #contextSquare {
+    position: fixed;
+    z-index: 10000;
+    background: #fff;
+    border-radius: 8px;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    left: 0; top: 0;
+    opacity: 0;
+    transform: scale(1);
+    transition:
+      opacity 0.12s,
+      width 0.32s cubic-bezier(.4,1.4,.6,1),
+      height 0.32s cubic-bezier(.4,1.4,.6,1),
+      transform 0.32s cubic-bezier(.4,1.4,.6,1);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #contextSquare.active {
+    opacity: 1;
+  }
+  #contextSquare #sju-blur-text {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: 'BitmapFont', Arial, sans-serif;
+    font-size: 1.1em;
+    color: #232323;
+    filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.18s;
+    z-index: 1;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 4px #fff, 0 0 8px #fff;
+  }
+  #contextSquare.show-blur-text #sju-blur-text {
+    opacity: 1;
+  }
+</style>
+
+<!-- Make the right click menu available on the whole page -->
+<div id="contextSquare">
+  <span id="sju-blur-text">sju</span>
+</div>
+<div id="customContextMenu">
+  <div class="menu-item" onclick="handleCopy()">Copy</div>
+  <div class="menu-item" onclick="handleShare()">Share</div>
+  <div class="menu-item" onclick="handleRefresh()">Refresh</div>
+  <div class="menu-item" onclick="handlePrint()">Print</div>
+</div>
+
+<script>
+  const menu = document.getElementById('customContextMenu');
+  const square = document.getElementById('contextSquare');
+  const sjuText = document.getElementById('sju-blur-text');
+
+  // Helper to get menu size (make square always a square, using max dimension)
+  function getMenuSize() {
+    menu.style.display = 'block';
+    menu.style.opacity = '0';
+    menu.style.left = '-9999px';
+    menu.style.top = '-9999px';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    const rect = menu.getBoundingClientRect();
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    const maxDim = Math.max(rect.width, rect.height);
+    return { width: maxDim, height: maxDim };
+  }
+
+  // Trigger context menu on the whole document
+  document.addEventListener('contextmenu', function(e) {
+    // Don't show custom menu if right-clicking on the menu itself
+    if (menu.contains(e.target)) return;
+
+    e.preventDefault();
+
+    // Hide menu and square if already visible
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.transition = 'none';
+    sjuText.style.opacity = '0';
+
+    // Get the position relative to the viewport
+    const relX = e.clientX;
+    const relY = e.clientY;
+
+    // Place the white square at mouse pointer, small size
+    square.style.position = 'fixed';
+    square.style.left = relX + 'px';
+    square.style.top = relY + 'px';
+    square.style.width = '16px';
+    square.style.height = '16px';
+    square.style.opacity = '1';
+    square.style.transform = 'scale(1)';
+    square.classList.add('active');
+    square.classList.remove('show-blur-text');
+    sjuText.style.opacity = '0';
+
+    // Calculate menu size for expansion (make square)
+    const menuSize = getMenuSize();
+    const expandSize = Math.max(70, menuSize.width + 12);
+
+    // Animate the square to expand at the pointer (no offset)
+    setTimeout(() => {
+      square.style.transition =
+        'width 0.32s cubic-bezier(.4,1.4,.6,1), ' +
+        'height 0.32s cubic-bezier(.4,1.4,.6,1), ' +
+        'opacity 0.12s, ' +
+        'transform 0.32s cubic-bezier(.4,1.4,.6,1)';
+      square.style.width = expandSize + 'px';
+      square.style.height = expandSize + 'px';
+      square.style.left = relX + 'px';
+      square.style.top = relY + 'px';
+      square.style.transformOrigin = 'top left';
+      square.style.transform = 'scale(1)';
+
+      // Show the blurred sju text as the square expands
+      setTimeout(() => {
+        square.classList.add('show-blur-text');
+      }, 60);
+
+      // After expansion, show the menu at the pointer (no offset)
+      setTimeout(() => {
+        // Position menu at the pointer, but keep inside viewport
+        let menuX = relX;
+        let menuY = relY;
+        if (menuX + expandSize > window.innerWidth) {
+          menuX = window.innerWidth - expandSize - 4;
+        }
+        if (menuY + expandSize > window.innerHeight) {
+          menuY = window.innerHeight - expandSize - 4;
+        }
+        menu.style.width = expandSize + 'px';
+        menu.style.height = expandSize + 'px';
+        menu.style.left = menuX + 'px';
+        menu.style.top = menuY + 'px';
+        menu.style.display = 'block';
+        setTimeout(() => {
+          menu.style.opacity = '1';
+        }, 10);
+
+        // Fade out the square and sju text after menu is visible
+        setTimeout(() => {
+          square.style.opacity = '0';
+          square.classList.remove('show-blur-text');
+        }, 80);
+      }, 220);
+    }, 8);
+  });
+
+  // Hide menu and square on click outside
+  document.addEventListener('mousedown', function(e) {
+    if (!menu.contains(e.target)) {
+      menu.style.display = 'none';
+      menu.style.opacity = '0';
+      menu.style.width = 'auto';
+      menu.style.height = 'auto';
+      square.classList.remove('active', 'show-blur-text');
+      square.style.opacity = '0';
+      sjuText.style.opacity = '0';
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  });
+
+  window.addEventListener('scroll', function() {
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  });
+
+  // Custom menu actions
+  function handleCopy() {
+    let selectedText = window.getSelection().toString();
+    if (selectedText) {
+      navigator.clipboard.writeText(selectedText).then(() => {
+        consol.log('Copied: ' + selectedText);
+      }, () => {
+        consol.log('Copy failed.');
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        consol.log('Page URL copied!');
+      }, () => {
+        consol.log('Copy failed.');
+      });
+    }
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+
+  function handleShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        url: window.location.href
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        consol.log('Page URL copied! (Share not supported)');
+      });
+    }
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+
+  function handleRefresh() {
+    location.reload();
+  }
+
+  function handlePrint() {
+    window.print();
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+</script>
+</html>
+

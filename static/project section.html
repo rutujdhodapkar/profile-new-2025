@@ -1,0 +1,1043 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects -Rutuj Dhodapkar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BitmapFont';
+      src: url('BitmapFont.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@300;500;700&display=swap');
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #000000;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      min-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* --- Blur Out Animation Overlay --- */
+    .page-blur-overlay {
+      position: fixed;
+      z-index: 1;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      opacity: 1;
+    }
+    @keyframes blurOutAnim {
+      0% {
+        opacity: 1;
+        -webkit-backdrop-filter: blur(32px);
+        backdrop-filter: blur(32px);
+      }
+      60% {
+        opacity: 1;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+      }
+      90% {
+        opacity: 0.2;
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+      }
+      100% {
+        opacity: 0;
+        -webkit-backdrop-filter: blur(0px);
+        backdrop-filter: blur(0px);
+      }
+    }
+    .page-blur-overlay.hide {
+      display: none !important;
+    }
+    /* --- End Blur Out Animation Overlay --- */
+    .bottom-right-number {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      pointer-events: none;
+      margin: 0 !important;
+      padding: 0 !important;
+      /* Add a little padding from the edge */
+      padding-right: 18px;
+      /* Remove bottom padding, since it's now vertically centered */
+      padding-bottom: 0;
+    }
+    .bottom-right-number .number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 220px;
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 3px #ffffff;
+      opacity: 0.3;
+      line-height: 1;
+      user-select: none;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .center-content-outer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-width: 100vw;
+      z-index: 1;
+      pointer-events: auto;
+    }
+    .project-title {
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: -120px;
+      margin-top: 0;
+      /* Use Orbitron for "Project" title, not BitmapFont */
+      font-family: 'Krona One', Arial, sans-serif;
+    }
+    .main-content-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .rectangle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto;
+      width: fit-content;
+      height: 80vh;
+      position: relative;
+      z-index: 1;
+    }
+    .vertical-rectangle {
+      width: 80px;
+      height: 170px;
+      background: linear-gradient(135deg, #ff7f50, #ff6347);
+      transition:
+        width 0.3s ease-out,
+        height 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        z-index 0.18s,
+        transform 0.3s ease-out,
+        left 0.3s ease-out,
+        margin 0.3s ease-out,
+        opacity 0.3s ease-out,
+        filter 0.3s ease-out,
+        background 0.3s ease-out;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #26262636;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      will-change: width, height, box-shadow, transform, margin, opacity, filter, background;
+      filter: none;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .vertical-rectangle .rectangle-label {
+      display: none;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .vertical-rectangle .rectangle-content {
+      display: none;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .vertical-rectangle img {
+      filter: none;
+      transition: filter 0.3s ease-out;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+    .vertical-rectangle .no-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bbb;
+      font-size: 1.1rem;
+      background: #222;
+      text-align: center;
+      padding: 10px;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .vertical-rectangle.bigger {
+      width: 160px;
+      height: 230px;
+      z-index: 4;
+      box-shadow: 0 16px 48px 0 rgba(0, 140, 255, 0.57);
+      transform: scale(1.18);
+      border-radius: 0;
+      background: linear-gradient(135deg, #3498db86, #2980b986);
+      filter: none;
+      transition:
+        width 0.3s ease-out,
+        height 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        z-index 0.18s,
+        transform 0.3s ease-out,
+        margin 0.3s ease-out,
+        opacity 0.3s ease-out,
+        filter 0.3s ease-out,
+        background 0.3s ease-out;
+    }
+    .vertical-rectangle.bigger img {
+      filter: none;
+    }
+    .vertical-rectangle.bigger.long-hover {
+      width: 450px !important;
+      height: 260px !important;
+      transition: width 0.3s ease-out, height 0.3s ease-out;
+    }
+    .vertical-rectangle.side {
+      width: 60px;
+      height: 180px;
+      z-index: 3;
+      box-shadow: 0 8px 24px rgba(0, 140, 255, 0.25), 0 0 32px 16px rgba(0, 180, 255, 0.18);
+      opacity: 0.97;
+      border-radius: 0;
+      background: linear-gradient(135deg, #4fc3f7a1, #81d4fba4);
+      filter: none;
+      transition:
+        width 0.3s ease-out,
+        height 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        z-index 0.18s,
+        transform 0.3s ease-out,
+        margin 0.3s ease-out,
+        opacity 0.3s ease-out,
+        filter 0.3s ease-out,
+        background 0.3s ease-out;
+    }
+    .vertical-rectangle.side img {
+      filter: none;
+    }
+    .vertical-rectangle.side2 {
+      width: 70px;
+      height: 150px;
+      z-index: 2;
+      box-shadow: 0 4px 16px rgba(0, 180, 255, 0.13), 0 0 24px 8px rgba(0, 180, 255, 0.10);
+      opacity: 0.88;
+      border-radius: 0;
+      background: linear-gradient(135deg, #b3e5fc99, #e1f5fe99);
+      filter: none;
+      transition:
+        width 0.3s ease-out,
+        height 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        z-index 0.18s,
+        transform 0.3s ease-out,
+        margin 0.3s ease-out,
+        opacity 0.3s ease-out,
+        filter 0.3s ease-out,
+        background 0.3s ease-out;
+    }
+    .vertical-rectangle.side2 img {
+      filter: none;
+    }
+    .vertical-rectangle.far {
+      opacity: 0.65;
+      filter: none;
+      z-index: 1;
+      transform: scale(0.98);
+      width: 50px;
+      height: 130px;
+      border-radius: 0;
+      background: #e3f2fd33;
+      box-shadow: 0 0 24px 8px rgba(33, 150, 243, 0.08);
+      transition:
+        width 0.3s ease-out,
+        height 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        z-index 0.18s,
+        transform 0.3s ease-out,
+        margin 0.3s ease-out,
+        opacity 0.3s ease-out,
+        filter 0.3s ease-out,
+        background 0.3s ease-out;
+    }
+    .vertical-rectangle.far img {
+      filter: none;
+    }
+    .hover-info {
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translate(-50%, 0);
+      text-align: center;
+      color: #fff;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      width: 80%;
+      transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+      opacity: 0;
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0);
+      border-radius: 12px;
+      padding: 16px 0;
+    }
+    .hover-info.visible {
+      opacity: 1;
+      transform: translate(-50%, -10px);
+    }
+    .hover-info .title {
+      position: static;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      width: 100%;
+      text-align: center;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .hover-info .description {
+      position: static;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-top: 0;
+      width: 100%;
+      text-align: center;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .bottom-hover-info {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(.4,0,.2,1);
+      padding: 32px 0 40px 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.92) 80%, rgba(0,0,0,0.0) 100%);
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .bottom-hover-info.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .bottom-hover-info .bottom-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      letter-spacing: 0.02em;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .bottom-hover-info .bottom-description {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: #e0e0e0;
+      text-align: center;
+      max-width: 700px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      margin: 0 auto;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    /* Make project links blue instead of yellow */
+    .bottom-hover-info .bottom-description a,
+    .hover-info .description a {
+      color: #2196f3 !important;
+      text-decoration: underline;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .bottom-hover-info .bottom-description span[style*="color:#ffd480"],
+    .hover-info .description span[style*="color:#ffd480"] {
+      color: #2196f3 !important;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    @media (max-width: 900px) {
+      .bottom-right-number .number {
+        font-size: 120px;
+      }
+      .project-title {
+        font-size: 2rem;
+        margin-bottom: -60px;
+        font-family: 'Krona One', Arial, sans-serif;
+      }
+      .hover-info .title {
+        font-size: 1.2rem;
+      }
+      .hover-info .description {
+        font-size: 1rem;
+      }
+      .bottom-hover-info .bottom-title {
+        font-size: 1.2rem;
+      }
+      .bottom-hover-info .bottom-description {
+        font-size: 1rem;
+      }
+      .bottom-hover-info {
+        padding: 18px 0 24px 0;
+      }
+      .bottom-right-number {
+        padding-right: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Blur Out Animation Overlay -->
+  <div class="page-blur-overlay" id="page-blur-overlay"></div>
+  <!-- End Blur Out Animation Overlay -->
+  <div class="bottom-right-number">
+    <div class="number">04</div>
+  </div>
+  <div class="center-content-outer">
+    <div class="project-title">Project</div>
+    <div class="main-content-wrapper">
+      <div class="rectangle-container" id="rect-container">
+        <!-- Project rectangles will be injected here -->
+      </div>
+    </div>
+    <div class="hover-info" id="hover-info">
+      <div class="title" id="hover-title"></div>
+      <div class="description" id="hover-description"></div>
+    </div>
+  </div>
+  <!-- Bottom info bar for long hover -->
+  <div class="bottom-hover-info" id="bottom-hover-info">
+    <div class="bottom-title" id="bottom-hover-title"></div>
+    <div class="bottom-description" id="bottom-hover-description"></div>
+  </div>
+  <script>
+    // --- Blur Out Animation Logic ---
+    (function() {
+      // Remove the blur overlay after animation completes
+      function removeBlurOverlay() {
+        var overlay = document.getElementById('page-blur-overlay');
+        if (overlay) {
+          overlay.classList.add('hide');
+          setTimeout(function() {
+            if (overlay && overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          }, 400); // allow for display:none to take effect
+        }
+      }
+      // Listen for animation end
+      window.addEventListener('DOMContentLoaded', function() {
+        var overlay = document.getElementById('page-blur-overlay');
+        if (overlay) {
+          overlay.addEventListener('animationend', removeBlurOverlay);
+        }
+      });
+      // Fallback: remove after 1.5s in case animationend not fired
+      setTimeout(removeBlurOverlay, 1600);
+    })();
+    // --- End Blur Out Animation Logic ---
+
+    // Helper to log errors
+    function logError(context, error) {
+      if (window && window.console && typeof window.console.error === 'function') {
+        console.error(`[Rectangle Error][${context}]`, error);
+      }
+    }
+
+    // Helper: parse a CSV line, handling quoted values
+    function parseCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"' && (i === 0 || line[i - 1] !== '\\')) {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    // Helper: escape HTML to prevent XSS
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // Helper: convert Windows full path to file URL
+    function windowsPathToFileUrl(path) {
+      // Remove quotes if present
+      path = path.replace(/^"(.*)"$/, '$1');
+      // Replace backslashes with slashes
+      let urlPath = path.replace(/\\/g, '/');
+      // If path starts with drive letter, add file:///
+      if (/^[a-zA-Z]:\//.test(urlPath)) {
+        urlPath = 'file:///' + urlPath;
+      }
+      return urlPath;
+    }
+
+    // Fetch and process project data from data.csv
+    function fetchProjectData() {
+      fetch('./data.csv')
+        .then(response => {
+          if (!response.ok) {
+            // Try absolute path as fallback
+            return fetch('/data.csv');
+          }
+          return response;
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load data.csv');
+          return response.text();
+        })
+        .then(csvText => {
+          // Parse CSV
+          const lines = csvText.trim().split('\n');
+          if (lines.length < 2) {
+            showNoProjects('No project data found.');
+            return;
+          }
+          // Get header and find indices for required columns
+          const headers = lines[0].split(',');
+          const idxTitle = headers.indexOf('ptitle');
+          const idxDesc = headers.indexOf('pdescriptio');
+          const idxLink = headers.indexOf('plinks');
+          const idxDate = headers.indexOf('pdate');
+          const idxImg = headers.indexOf('pimgpath');
+          if (idxTitle === -1 && idxDesc === -1 && idxLink === -1 && idxDate === -1 && idxImg === -1) {
+            showNoProjects('Required columns not found in data.csv.');
+            return;
+          }
+          let projects = [];
+          for (let i = 1; i < lines.length; i++) {
+            const row = parseCSVLine(lines[i]);
+            // Only add if at least one field is present
+            if (
+              (idxTitle !== -1 && row[idxTitle] && row[idxTitle].trim()) ||
+              (idxDesc !== -1 && row[idxDesc] && row[idxDesc].trim()) ||
+              (idxLink !== -1 && row[idxLink] && row[idxLink].trim()) ||
+              (idxDate !== -1 && row[idxDate] && row[idxDate].trim()) ||
+              (idxImg !== -1 && row[idxImg] && row[idxImg].trim())
+            ) {
+              projects.push({
+                ptitle: idxTitle !== -1 ? row[idxTitle] : '',
+                pdescriptio: idxDesc !== -1 ? row[idxDesc] : '',
+                plinks: idxLink !== -1 ? row[idxLink] : '',
+                pdate: idxDate !== -1 ? row[idxDate] : '',
+                pimgpath: idxImg !== -1 ? row[idxImg] : ''
+              });
+            }
+          }
+          if (!projects.length) {
+            showNoProjects('No valid project data found.');
+            return;
+          }
+          renderProjects(projects);
+          updateListeners();
+          // Auto-bigger the first rectangle if present
+          var first = document.querySelector('.vertical-rectangle');
+          if (first) {
+            highlightWithSides(first);
+            setTimeout(function() {
+              try {
+                resetAll();
+              } catch (e) {
+                logError('DOMContentLoaded-resetAll', e);
+              }
+            }, 700);
+          }
+        })
+        .catch(err => {
+          let msg = err.message;
+          if (
+            msg.includes('Failed to fetch') ||
+            msg.includes('404') ||
+            msg.includes('Not Found')
+          ) {
+            window.location.href = 'error.html';
+          }
+          showNoProjects(msg);
+        });
+    }
+
+    function showNoProjects(message) {
+      const container = document.getElementById('rect-container');
+      container.innerHTML = '';
+      const msg = document.createElement('div');
+      msg.style.color = '#fff';
+      msg.style.fontSize = '2rem';
+      msg.style.textAlign = 'center';
+      msg.style.padding = '60px 30px';
+      msg.style.fontFamily = "'BitmapFont', Arial, sans-serif";
+      msg.textContent = message || 'No projects found.';
+      container.appendChild(msg);
+    }
+
+    // Helper to create a rectangle for a project
+    function createProjectRectangle(project, idx) {
+      const div = document.createElement('div');
+      div.className = 'vertical-rectangle';
+      div.setAttribute('tabindex', '0');
+      div.setAttribute('data-title', project.ptitle || 'Untitled');
+      // Compose description: description, date, link
+      let desc = '';
+      if (project.pdescriptio && project.pdescriptio.trim()) {
+        desc += escapeHTML(project.pdescriptio);
+      }
+      if (project.pdate && project.pdate.trim() && isNaN(project.pdate.trim())) {
+        desc += (desc ? '<br>' : '') + '<span style="color:#8fd3ff;font-size:1.1rem;font-family:BitmapFont,Arial,sans-serif;">Date: ' + escapeHTML(project.pdate) + '</span>';
+      }
+      if (project.plinks && project.plinks.trim()) {
+        // Change link color to blue (#2196f3)
+        desc += (desc ? '<br>' : '') + '<span style="color:#2196f3;font-size:1.1rem;font-family:BitmapFont,Arial,sans-serif;">Link: <a href="' + escapeHTML(project.plinks) + '" target="_blank" style="color:#2196f3;text-decoration:underline;font-family:BitmapFont,Arial,sans-serif;">' + escapeHTML(project.plinks) + '</a></span>';
+      }
+      if (!desc) desc = '<span style="color:#ffb3b3;font-family:BitmapFont,Arial,sans-serif;">No description available.</span>';
+      div.setAttribute('data-description', desc);
+
+      // Add image if available, else show "no path found"
+      if (project.pimgpath && project.pimgpath.trim()) {
+        // Convert Windows full path to file URL for browser
+        const img = document.createElement('img');
+        img.src = windowsPathToFileUrl(project.pimgpath.trim());
+        img.alt = project.ptitle || 'Project image';
+        img.onerror = function() {
+          // If image fails to load, show "no path found"
+          this.style.display = 'none';
+          if (!div.querySelector('.no-image')) {
+            const noimg = document.createElement('div');
+            noimg.className = 'no-image';
+            noimg.textContent = 'No path found';
+            div.appendChild(noimg);
+          }
+        };
+        div.appendChild(img);
+      } else {
+        const noimg = document.createElement('div');
+        noimg.className = 'no-image';
+        noimg.textContent = 'No path found';
+        div.appendChild(noimg);
+      }
+      // Optionally, add a label for accessibility
+      const label = document.createElement('span');
+      label.className = 'rectangle-label';
+      label.textContent = project.ptitle || 'Untitled';
+      div.appendChild(label);
+      // Store the link as a data attribute for click
+      if (project.plinks && project.plinks.trim()) {
+        div.setAttribute('data-link', project.plinks.trim());
+      }
+      return div;
+    }
+
+    // Render projects or show message if none
+    function renderProjects(projectData) {
+      const container = document.getElementById('rect-container');
+      container.innerHTML = '';
+      if (!projectData || !Array.isArray(projectData) || projectData.length === 0) {
+        showNoProjects('No projects found.');
+        return;
+      }
+      projectData.forEach((project, idx) => {
+        const rect = createProjectRectangle(project, idx);
+        container.appendChild(rect);
+      });
+    }
+
+    // --- Rectangle Highlight/Interaction Logic (unchanged) ---
+    function clearHighlights() {
+      try {
+        const rects = document.querySelectorAll('.vertical-rectangle');
+        if (!rects || typeof rects.forEach !== 'function') throw new Error('No rectangles found');
+        rects.forEach(function(rect) {
+          if (!rect) return;
+          rect.classList.remove('bigger', 'side', 'side2', 'far', 'long-hover');
+          rect.style.transform = '';
+          rect.style.zIndex = '';
+          rect.style.marginLeft = '';
+          rect.style.marginRight = '';
+          rect.style.transitionDelay = '';
+          rect.style.background = '';
+          rect.style.filter = '';
+          rect.style.boxShadow = '';
+          // Remove color from images
+          var imgs = rect.querySelectorAll('img');
+          imgs.forEach(function(img) {
+            img.style.filter = '';
+          });
+        });
+      } catch (e) {
+        logError('clearHighlights', e);
+      }
+    }
+
+    function sequentialHighlight(target) {
+      try {
+        const rects = Array.from(document.querySelectorAll('.vertical-rectangle'));
+        const idx = rects.indexOf(target);
+        if (idx === -1) throw new Error('Target rectangle not found in list');
+
+        let currentIdx = rects.findIndex(rect => rect.classList.contains('bigger'));
+        if (currentIdx === -1) currentIdx = idx;
+
+        const step = currentIdx < idx ? 1 : -1;
+        let i = currentIdx;
+
+        function stepHighlight() {
+          if (i !== idx) {
+            highlightWithSides(rects[i]);
+            i += step;
+            setTimeout(stepHighlight, 50);
+          } else {
+            highlightWithSides(rects[i]);
+          }
+        }
+
+        stepHighlight();
+      } catch (e) {
+        logError('sequentialHighlight', e);
+      }
+    }
+
+    function highlightWithSides(target) {
+      try {
+        if (!target) throw new Error('Target rectangle is null or undefined');
+        clearHighlights();
+        const rects = Array.from(document.querySelectorAll('.vertical-rectangle'));
+        if (!rects.length) throw new Error('No rectangles found');
+        const idx = rects.indexOf(target);
+        if (idx === -1) throw new Error('Target rectangle not found in list');
+        const expandedGap = 24;
+        rects.forEach((rect, i) => {
+          if (!rect) return;
+          rect.style.zIndex = 1;
+          rect.style.marginLeft = '';
+          rect.style.marginRight = '';
+          rect.classList.remove('bigger', 'side', 'side2', 'far', 'long-hover');
+          rect.style.transitionDelay = (Math.abs(i - idx) * 0.02) + 's';
+          rect.style.background = '';
+          rect.style.filter = '';
+          rect.style.boxShadow = '';
+          var imgs = rect.querySelectorAll('img');
+          imgs.forEach(function(img) {
+            img.style.filter = '';
+          });
+        });
+        rects.forEach((rect, i) => {
+          if (!rect) return;
+          try {
+            if (i === idx) {
+              rect.classList.add('bigger');
+              rect.style.zIndex = 4;
+              rect.style.transform = 'scale(1.18)';
+              rect.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+              rect.style.filter = 'none';
+              rect.style.boxShadow = '0 16px 48px 0 rgba(0, 140, 255, 0.57)';
+              var imgs = rect.querySelectorAll('img');
+              imgs.forEach(function(img) {
+                img.style.filter = 'none';
+              });
+              if (rects[i - 1]) {
+                rects[i - 1].style.marginRight = expandedGap + 'px';
+              }
+              if (rects[i + 1]) {
+                rects[i + 1].style.marginLeft = expandedGap + 'px';
+              }
+            } else if (i === idx - 1 || i === idx + 1) {
+              rect.classList.add('side');
+              rect.style.zIndex = 3;
+              rect.style.transform = 'scale(1.07)';
+              rect.style.background = 'linear-gradient(135deg, #4fc3f7a1, #81d4fba4)';
+              rect.style.filter = 'grayscale(0.3) brightness(1.2) blur(1px)';
+              rect.style.boxShadow = '0 8px 24px rgba(0, 140, 255, 0.25), 0 0 32px 16px rgba(0, 180, 255, 0.18)';
+              var imgs = rect.querySelectorAll('img');
+              imgs.forEach(function(img) {
+                img.style.filter = 'grayscale(0.3) brightness(1.2) blur(1px)';
+              });
+            } else if (i === idx - 2 || i === idx + 2) {
+              rect.classList.add('side2');
+              rect.style.zIndex = 2;
+              rect.style.transform = 'scale(1.03)';
+              rect.style.background = 'linear-gradient(135deg, #b3e5fc99, #e1f5fe99)';
+              rect.style.filter = 'grayscale(0.5) brightness(1.3) blur(2px)';
+              rect.style.boxShadow = '0 4px 16px rgba(0, 180, 255, 0.13), 0 0 24px 8px rgba(0, 180, 255, 0.10)';
+              var imgs = rect.querySelectorAll('img');
+              imgs.forEach(function(img) {
+                img.style.filter = 'grayscale(0.5) brightness(1.3) blur(2px)';
+              });
+            } else {
+              rect.classList.add('far');
+              rect.style.transform = 'scale(0.98)';
+              rect.style.zIndex = 1;
+              rect.style.background = '#fff';
+              rect.style.filter = 'blur(4px) grayscale(1) brightness(1.1)';
+              rect.style.boxShadow = '0 0 24px 8px rgba(33, 150, 243, 0.08)';
+              var imgs = rect.querySelectorAll('img');
+              imgs.forEach(function(img) {
+                img.style.filter = 'grayscale(1) blur(4px) brightness(1.1)';
+              });
+            }
+          } catch (e) {
+            logError('highlightWithSides-inner', e);
+          }
+        });
+      } catch (e) {
+        logError('highlightWithSides', e);
+      }
+    }
+
+    function resetAll() {
+      try {
+        const rects = document.querySelectorAll('.vertical-rectangle');
+        if (!rects || typeof rects.forEach !== 'function') throw new Error('No rectangles found');
+        rects.forEach(function(rect) {
+          if (!rect) return;
+          rect.classList.remove('bigger', 'side', 'side2', 'far', 'long-hover');
+          rect.style.transform = '';
+          rect.style.zIndex = '';
+          rect.style.marginLeft = '';
+          rect.style.marginRight = '';
+          rect.style.transitionDelay = '';
+          rect.style.background = '';
+          rect.style.filter = '';
+          rect.style.boxShadow = '';
+          var imgs = rect.querySelectorAll('img');
+          imgs.forEach(function(img) {
+            img.style.filter = '';
+          });
+        });
+        hideBottomHoverInfo();
+      } catch (e) {
+        logError('resetAll', e);
+      }
+    }
+
+    function showBottomHoverInfo(title, description) {
+      try {
+        var bottomInfo = document.getElementById('bottom-hover-info');
+        var bottomTitle = document.getElementById('bottom-hover-title');
+        var bottomDesc = document.getElementById('bottom-hover-description');
+        if (bottomInfo && bottomTitle && bottomDesc) {
+          bottomTitle.textContent = title || '';
+          // description may contain HTML, so use innerHTML
+          bottomDesc.innerHTML = description || '';
+          bottomInfo.classList.add('visible');
+        }
+      } catch (e) {
+        logError('showBottomHoverInfo', e);
+      }
+    }
+    function hideBottomHoverInfo() {
+      try {
+        var bottomInfo = document.getElementById('bottom-hover-info');
+        var bottomTitle = document.getElementById('bottom-hover-title');
+        var bottomDesc = document.getElementById('bottom-hover-description');
+        if (bottomInfo && bottomTitle && bottomDesc) {
+          bottomInfo.classList.remove('visible');
+          bottomTitle.textContent = '';
+          bottomDesc.textContent = '';
+        }
+      } catch (e) {
+        logError('hideBottomHoverInfo', e);
+      }
+    }
+
+    // Update event listeners to use sequentialHighlight
+    function updateListeners() {
+      try {
+        const rects = document.querySelectorAll('.vertical-rectangle');
+        if (!rects || typeof rects.forEach !== 'function') throw new Error('No rectangles found');
+        rects.forEach(function(rect) {
+          if (!rect) return;
+          let longHoverTimeout = null;
+          let longHoverActive = false;
+
+          rect.addEventListener('mouseenter', function() {
+            try {
+              sequentialHighlight(rect);
+              const hoverInfo = document.getElementById('hover-info');
+              const hoverTitle = document.getElementById('hover-title');
+              const hoverDescription = document.getElementById('hover-description');
+              hoverTitle.textContent = rect.getAttribute('data-title');
+              hoverDescription.innerHTML = rect.getAttribute('data-description') || '';
+              hoverInfo.classList.add('visible');
+              longHoverTimeout = setTimeout(function() {
+                try {
+                  if (rect.classList.contains('bigger')) {
+                    rect.classList.add('long-hover');
+                    showBottomHoverInfo(rect.getAttribute('data-title'), rect.getAttribute('data-description'));
+                    longHoverActive = true;
+                  }
+                } catch (e) {
+                  logError('mouseenter-longHoverTimeout', e);
+                }
+              }, 700);
+            } catch (e) {
+              logError('mouseenter', e);
+            }
+          });
+
+          rect.addEventListener('mouseleave', function() {
+            try {
+              resetAll();
+              const hoverInfo = document.getElementById('hover-info');
+              const hoverTitle = document.getElementById('hover-title');
+              const hoverDescription = document.getElementById('hover-description');
+              hoverTitle.textContent = '';
+              hoverDescription.textContent = '';
+              hoverInfo.classList.remove('visible');
+              if (longHoverTimeout) {
+                clearTimeout(longHoverTimeout);
+                longHoverTimeout = null;
+              }
+              if (longHoverActive) {
+                hideBottomHoverInfo();
+                longHoverActive = false;
+              }
+            } catch (e) {
+              logError('mouseleave', e);
+            }
+          });
+
+          rect.addEventListener('focus', function() {
+            try {
+              sequentialHighlight(rect);
+              const hoverInfo = document.getElementById('hover-info');
+              const hoverTitle = document.getElementById('hover-title');
+              const hoverDescription = document.getElementById('hover-description');
+              hoverTitle.textContent = rect.getAttribute('data-title');
+              hoverDescription.innerHTML = rect.getAttribute('data-description') || '';
+              hoverInfo.classList.add('visible');
+              longHoverTimeout = setTimeout(function() {
+                try {
+                  if (rect.classList.contains('bigger')) {
+                    rect.classList.add('long-hover');
+                    showBottomHoverInfo(rect.getAttribute('data-title'), rect.getAttribute('data-description'));
+                    longHoverActive = true;
+                  }
+                } catch (e) {
+                  logError('focus-longHoverTimeout', e);
+                }
+              }, 700);
+            } catch (e) {
+              logError('focus', e);
+            }
+          });
+
+          rect.addEventListener('blur', function() {
+            try {
+              resetAll();
+              const hoverInfo = document.getElementById('hover-info');
+              const hoverTitle = document.getElementById('hover-title');
+              const hoverDescription = document.getElementById('hover-description');
+              hoverTitle.textContent = '';
+              hoverDescription.textContent = '';
+              hoverInfo.classList.remove('visible');
+              if (longHoverTimeout) {
+                clearTimeout(longHoverTimeout);
+                longHoverTimeout = null;
+              }
+              if (longHoverActive) {
+                hideBottomHoverInfo();
+                longHoverActive = false;
+              }
+            } catch (e) {
+              logError('blur', e);
+            }
+          });
+
+          // Open link on click if available
+          rect.addEventListener('click', function(e) {
+            try {
+              const link = rect.getAttribute('data-link');
+              if (link) {
+                window.open(link, '_blank');
+              }
+            } catch (e) {
+              logError('click', e);
+            }
+          });
+
+          // Also allow keyboard "Enter" to open link if focused
+          rect.addEventListener('keydown', function(e) {
+            try {
+              if (e.key === 'Enter' || e.keyCode === 13) {
+                const link = rect.getAttribute('data-link');
+                if (link) {
+                  window.open(link, '_blank');
+                }
+              }
+            } catch (e) {
+              logError('keydown', e);
+            }
+          });
+        });
+      } catch (e) {
+        logError('updateListeners', e);
+      }
+    }
+
+    // On DOMContentLoaded, fetch and render projects and set up listeners
+    window.addEventListener('DOMContentLoaded', function() {
+      try {
+        fetchProjectData();
+      } catch (e) {
+        logError('DOMContentLoaded', e);
+      }
+    });
+  </script>
+</body>
+
+
+
+
+<style>
+  ::selection {
+    background: #fff;
+    color: #000;
+  }
+</style>
+
+
+
+
+</html>
+

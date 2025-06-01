@@ -1,0 +1,678 @@
+<style>
+  body {
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #curveBtn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    font-size: 1.05rem;
+    font-family: monospace, 'CustomPixelFont', 'Courier New', Courier, monospace;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    transition: 
+      width 0.8s cubic-bezier(.4,1.2,.6,1), 
+      height 0.8s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 0.8s cubic-bezier(.4,1.2,.6,1),
+      font-size 0.8s,
+      background 0.8s,
+      color 0.8s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+    outline: none;
+  }
+  #curveBtn.stage2 {
+    width: 220px;
+    height: 60px;
+    border-radius: 40px;
+    font-size: 0.95rem;
+    background: #000000;
+    color: #ffffff;
+    font-family: monospace, 'CustomPixelFont', 'Courier New', Courier, monospace;
+    transition: 
+      width 0.8s cubic-bezier(.4,1.2,.6,1), 
+      height 0.8s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 0.8s cubic-bezier(.4,1.2,.6,1),
+      font-size 0.8s,
+      background 0.8s,
+      color 0.8s;
+  }
+  #curveBtn.fullscreen {
+    width: 3000px;
+    height: 3000px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    font-size: 1.3rem;
+    background: #000000;
+    color: #ffffff;
+    font-family: monospace, 'CustomPixelFont', 'Courier New', Courier, monospace;
+    transition: 
+      width 1.2s cubic-bezier(.4,1.2,.6,1), 
+      height 1.2s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 1.2s cubic-bezier(.4,1.2,.6,1),
+      font-size 1.2s,
+      background 1.2s,
+      color 1.2s;
+  }
+  #curveBtn .fade-text {
+    opacity: 0;
+    transition: opacity 0.4s;
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    font-family: monospace, 'CustomPixelFont', 'Courier New', Courier, monospace;
+  }
+  #curveBtn .fade-text.visible {
+    opacity: 1;
+    transition: opacity 0.4s;
+  }
+  /* Error overlay for mobile */
+  #mobileErrorOverlay {
+    position: fixed;
+    z-index: 100000;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #111;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace, 'CustomPixelFont', 'Courier New', Courier, monospace;
+    font-size: 0.95rem; /* smaller text */
+    text-align: center;
+    padding: 0 32px;
+    letter-spacing: 0.02em;
+    box-sizing: border-box;
+  }
+  #mobileErrorOverlay .mobile-error-content {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    #mobileErrorOverlay .mobile-error-content {
+      max-width: 95vw;
+      padding: 0 8px;
+      font-size: 0.85rem;
+    }
+    #mobileErrorOverlay {
+      font-size: 0.85rem;
+      padding: 0 8px;
+    }
+  }
+</style>
+<button id="curveBtn">
+  <span class="fade-text visible" id="loadingText"></span>
+  <span class="fade-text" id="stageText"></span>
+  <span class="fade-text" id="welcomeText"></span>
+</button>
+<script>
+  // --- PIXEL FONT LOGIC START ---
+  const pixelFont = {
+    ' ': [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '!': [[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0]],
+    '"': [[0,1,0,1,0],[0,1,0,1,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '#': [[0,1,0,1,0],[1,1,1,1,1],[0,1,0,1,0],[1,1,1,1,1],[0,1,0,1,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '$': [[0,0,1,0,0],[0,1,1,1,0],[1,0,1,0,0],[0,1,1,1,0],[0,0,1,0,1],[0,1,1,1,0],[0,0,1,0,0]],
+    '%': [[1,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,1],[0,0,0,0,0],[0,0,0,0,0]],
+    '&': [[0,1,1,0,0],[1,0,0,1,0],[1,0,1,0,0],[0,1,0,0,0],[1,0,1,0,1],[1,0,0,1,0],[0,1,1,0,1]],
+    "'": [[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '(': [[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]],
+    ')': [[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[0,0,0,1,0],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0]],
+    '*': [[0,0,0,0,0],[1,0,1,0,1],[0,1,1,1,0],[1,0,1,0,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '+': [[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0]],
+    ',': [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,1,0,0,0]],
+    '-': [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '.': [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    '/': [[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '0': [[0,1,1,1,0],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    '1': [[0,0,1,0,0],[0,1,1,0,0],[1,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
+    '2': [[0,1,1,1,0],[1,0,0,0,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,1,1,1,1]],
+    '3': [[1,1,1,1,0],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,1,0],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    '4': [[0,0,0,1,0],[0,0,1,1,0],[0,1,0,1,0],[1,0,0,1,0],[1,1,1,1,1],[0,0,0,1,0],[0,0,0,1,0]],
+    '5': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[0,0,0,0,1],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    '6': [[0,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    '7': [[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0]],
+    '8': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    '9': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[0,0,0,0,1],[0,1,1,1,0]],
+    ':': [[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0]],
+    ';': [[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,1,0,0,0]],
+    '<': [[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0]],
+    '=': [[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '>': [[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0]],
+    '?': [[0,1,1,1,0],[1,0,0,0,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0]],
+    '@': [[0,1,1,1,0],[1,0,0,0,1],[1,0,1,1,1],[1,0,1,0,1],[1,0,1,1,1],[1,0,0,0,0],[0,1,1,1,0]],
+    'A': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'B': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0]],
+    'C': [[0,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,1,1,1]],
+    'D': [[1,1,1,0,0],[1,0,0,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,1,0],[1,1,1,0,0]],
+    'E': [[1,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    'F': [[1,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]],
+    'G': [[0,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1]],
+    'H': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'I': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
+    'J': [[0,0,0,1,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'K': [[1,0,0,0,1],[1,0,0,1,0],[1,0,1,0,0],[1,1,0,0,0],[1,0,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
+    'L': [[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    'M': [[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'N': [[1,0,0,0,1],[1,1,0,0,1],[1,0,1,0,1],[1,0,0,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'O': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'P': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]],
+    'Q': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,1,0],[0,1,1,0,1]],
+    'R': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,0,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
+    'S': [[0,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'T': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    'U': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'V': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,1,0,1,0],[0,0,1,0,0]],
+    'W': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,1,0,1],[1,1,0,1,1],[1,1,0,1,1],[1,0,0,0,1]],
+    'X': [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'Y': [[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    'Z': [[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    '[': [[1,1,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,0,0]],
+    '\\': [[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],[0,0,0,0,0],[0,0,0,0,0]],
+    ']': [[0,0,1,1,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,1,1,1]],
+    '^': [[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    '_': [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0]],
+    '`': [[0,1,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
+    'a': [[0,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[0,1,1,1,1],[1,0,0,0,1],[1,0,0,1,1],[0,1,1,0,1]],
+    'b': [[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0]],
+    'c': [[0,0,0,0,0],[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,1],[0,1,1,1,0]],
+    'd': [[0,0,0,0,1],[0,0,0,0,1],[0,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1]],
+    'e': [[0,0,0,0,0],[0,1,1,1,0],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,0],[1,0,0,0,1],[0,1,1,1,0]],
+    'f': [[0,0,1,1,0],[0,1,0,0,0],[1,1,1,1,0],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0],[1,1,1,0,0]],
+    'g': [[0,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'h': [[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'i': [[0,0,1,0,0],[0,0,0,0,0],[1,1,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
+    'j': [[0,0,0,1,0],[0,0,0,0,0],[0,0,1,1,0],[0,0,0,1,0],[0,0,0,1,0],[1,0,0,1,0],[0,1,1,0,0]],
+    'k': [[1,0,0,0,0],[1,0,0,1,0],[1,0,1,0,0],[1,1,0,0,0],[1,0,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
+    'l': [[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    'm': [[0,0,0,0,0],[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'n': [[0,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'o': [[0,0,0,0,0],[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'p': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]],
+    'q': [[0,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,1]],
+    'r': [[0,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]],
+    's': [[0,0,0,0,0],[0,1,1,1,1],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    't': [[0,1,0,0,0],[1,1,1,1,1],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,0,1,1,0]],
+    'u': [[0,0,0,0,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1]],
+    'v': [[0,0,0,0,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,1,0,1,0],[0,0,1,0,0]],
+    'w': [[0,0,0,0,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,1,0,1],[1,1,0,1,1],[1,1,0,1,1],[1,0,0,0,1]],
+    'x': [[0,0,0,0,0],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1],[1,0,0,0,1]],
+    'y': [[0,0,0,0,0],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'z': [[0,0,0,0,0],[1,1,1,1,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    '{': [[0,0,1,1,0],[0,1,0,0,0],[0,1,0,0,0],[1,1,1,0,0],[0,1,0,0,0],[0,1,0,0,0],[0,0,1,1,0]],
+    '|': [[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    '}': [[0,1,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,1,1,0,0]],
+    '~': [[0,0,0,0,0],[0,1,0,1,0],[1,0,1,0,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+  };
+
+  function renderPixelText(str, options = {}) {
+    const scale = options.scale || 3;
+    const spacing = options.spacing || 2;
+    const color = options.color || "#fff";
+    const chars = String(str).split('');
+    const charWidth = 5, charHeight = 7;
+    const width = chars.length * (charWidth * scale + spacing) - spacing;
+    const height = charHeight * scale;
+    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="vertical-align:middle;display:inline-block;">`;
+    let x = 0;
+    for (let c of chars) {
+      let matrix = pixelFont[c] || pixelFont[' '];
+      for (let row = 0; row < charHeight; row++) {
+        for (let col = 0; col < charWidth; col++) {
+          if (matrix[row][col]) {
+            svg += `<rect x="${x + col*scale}" y="${row*scale}" width="${scale}" height="${scale}" fill="${color}" rx="${scale/2}" />`;
+          }
+        }
+      }
+      x += charWidth * scale + spacing;
+    }
+    svg += `</svg>`;
+    return svg;
+  }
+  // --- PIXEL FONT LOGIC END ---
+
+  var btn = document.getElementById('curveBtn');
+  var loadingText = document.getElementById('loadingText');
+  var stageText = document.getElementById('stageText');
+  var welcomeText = document.getElementById('welcomeText');
+
+  loadingText.innerHTML = renderPixelText('', {scale: 3, color: "#fff"});
+  stageText.innerHTML = renderPixelText('Loading...', {scale: 2.5, color: "#fff"});
+  welcomeText.innerHTML = renderPixelText('Welcome', {scale: 3.5, color: "#fff"});
+
+  function showText(show, hide1, hide2) {
+    show.classList.add('visible');
+    hide1.classList.remove('visible');
+    hide2.classList.remove('visible');
+  }
+
+  function isMobileScreen() {
+    return window.innerWidth < 700 || window.innerHeight < 500;
+  }
+
+  var mobileBlocked = false;
+
+  function showMobileError() {
+    if (document.getElementById('mobileErrorOverlay')) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'mobileErrorOverlay';
+
+    // Centered, small text, padding left/right, all lines centered
+    var content = document.createElement('div');
+    content.className = 'mobile-error-content';
+    content.innerHTML =
+      renderPixelText('Site under development', {scale: 2, color: "#fff"}) +
+      "<br>" +
+      renderPixelText('for mobile version,', {scale: 1.7, color: "#fff"}) +
+      "<br>" +
+      renderPixelText('switch to Desktop', {scale: 1.7, color: "#fff"});
+
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+    btn.style.display = "none";
+    mobileBlocked = true;
+  }
+
+  if (isMobileScreen()) {
+    showMobileError();
+  }
+
+  window.addEventListener('resize', function() {
+    if (isMobileScreen()) {
+      showMobileError();
+    } else {
+      var overlay = document.getElementById('mobileErrorOverlay');
+      if (overlay) overlay.remove();
+      btn.style.display = "";
+      mobileBlocked = false;
+    }
+  });
+
+  if (!isMobileScreen()) {
+    showText(loadingText, stageText, welcomeText);
+
+    setTimeout(function() {
+      if (mobileBlocked) return;
+      btn.classList.add('stage2');
+      showText(stageText, loadingText, welcomeText);
+    }, 1200);
+
+    setTimeout(function() {
+      if (mobileBlocked) return;
+      btn.classList.remove('stage2');
+      btn.classList.add('fullscreen');
+      showText(welcomeText, loadingText, stageText);
+
+      setTimeout(function() {
+        if (mobileBlocked) return;
+        window.location.href = "Main.html";
+      }, 5000);
+
+    }, 3500);
+  }
+</script>
+<script>
+if (!window.isMobileScreen || !window.isMobileScreen()) {
+  var blurOverlay = document.createElement('div');
+  blurOverlay.style.position = 'fixed';
+  blurOverlay.style.left = '0';
+  blurOverlay.style.top = '0';
+  blurOverlay.style.width = '100vw';
+  blurOverlay.style.height = '100vh';
+  blurOverlay.style.background = '#000';
+  blurOverlay.style.opacity = '0';
+  blurOverlay.style.zIndex = '99999';
+  blurOverlay.style.pointerEvents = 'none';
+  blurOverlay.style.transition = 'opacity 0.7s cubic-bezier(.4,1.2,.6,1)';
+  blurOverlay.style.backdropFilter = 'blur(32px)';
+  document.body.appendChild(blurOverlay);
+
+  setTimeout(function() {
+    if (window.isMobileScreen && window.isMobileScreen()) return;
+    blurOverlay.style.opacity = '1';
+    setTimeout(function() {
+      if (window.isMobileScreen && window.isMobileScreen()) return;
+      window.location.href = "Main.html";
+    }, 700);
+  }, 5000);
+}
+</script>
+<!-- -----------------------------------------------right click menu----------------------------------------------- -->
+
+<!-- Custom Right Click Menu HTML and CSS -->
+<style>
+  @font-face {
+    font-family: 'BitmapFont';
+    src: url('BitmapFont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  #customContextMenu {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    background: #fff;
+    color: #232323;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    min-width: 90px;
+    font-family: 'BitmapFont', Arial, sans-serif;
+    padding: 3px 4px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.18s 0.12s, width 0.32s cubic-bezier(.4,1.4,.6,1), height 0.32s cubic-bezier(.4,1.4,.6,1);
+    width: auto;
+    height: auto;
+    font-size: 0.82em;
+  }
+  #customContextMenu .menu-item {
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    user-select: none;
+    color: #232323;
+    border-radius: 8px;
+    margin: 3px 0;
+    font-size: 0.92em;
+    font-family: 'BitmapFont', Arial, sans-serif;
+  }
+  #customContextMenu .menu-item:hover {
+    background: #f0f0f0;
+    color: #727272;
+  }
+  #customContextMenu .menu-separator {
+    height: 1px;
+    background: linear-gradient(90deg, #e0e0e0 0%, #f5f5f5 100%);
+    margin: 4px 0;
+    border: none;
+    border-radius: 8px;
+  }
+
+  /* Square blur animation - blur only inside the square */
+  #contextSquare {
+    position: fixed;
+    z-index: 10000;
+    background: #fff;
+    border-radius: 8px;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    left: 0; top: 0;
+    opacity: 0;
+    transform: scale(1);
+    transition:
+      opacity 0.12s,
+      width 0.32s cubic-bezier(.4,1.4,.6,1),
+      height 0.32s cubic-bezier(.4,1.4,.6,1),
+      transform 0.32s cubic-bezier(.4,1.4,.6,1);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #contextSquare.active {
+    opacity: 1;
+  }
+  #contextSquare #sju-blur-text {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: 'BitmapFont', Arial, sans-serif;
+    font-size: 1.1em;
+    color: #232323;
+    filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.18s;
+    z-index: 1;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 4px #fff, 0 0 8px #fff;
+  }
+  #contextSquare.show-blur-text #sju-blur-text {
+    opacity: 1;
+  }
+</style>
+
+<!-- Make the right click menu available on the whole page -->
+<div id="contextSquare">
+  <span id="sju-blur-text">sju</span>
+</div>
+<div id="customContextMenu">
+  <div class="menu-item" onclick="handleCopy()">Copy</div>
+  <div class="menu-item" onclick="handleShare()">Share</div>
+  <div class="menu-item" onclick="handleRefresh()">Refresh</div>
+  <div class="menu-item" onclick="handlePrint()">Print</div>
+</div>
+
+<script>
+  const menu = document.getElementById('customContextMenu');
+  const square = document.getElementById('contextSquare');
+  const sjuText = document.getElementById('sju-blur-text');
+
+  // Helper to get menu size (make square always a square, using max dimension)
+  function getMenuSize() {
+    menu.style.display = 'block';
+    menu.style.opacity = '0';
+    menu.style.left = '-9999px';
+    menu.style.top = '-9999px';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    const rect = menu.getBoundingClientRect();
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    const maxDim = Math.max(rect.width, rect.height);
+    return { width: maxDim, height: maxDim };
+  }
+
+  // Trigger context menu on the whole document
+  document.addEventListener('contextmenu', function(e) {
+    // Don't show custom menu if right-clicking on the menu itself
+    if (menu.contains(e.target)) return;
+
+    e.preventDefault();
+
+    // Hide menu and square if already visible
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.transition = 'none';
+    sjuText.style.opacity = '0';
+
+    // Get the position relative to the viewport
+    const relX = e.clientX;
+    const relY = e.clientY;
+
+    // Place the white square at mouse pointer, small size
+    square.style.position = 'fixed';
+    square.style.left = relX + 'px';
+    square.style.top = relY + 'px';
+    square.style.width = '16px';
+    square.style.height = '16px';
+    square.style.opacity = '1';
+    square.style.transform = 'scale(1)';
+    square.classList.add('active');
+    square.classList.remove('show-blur-text');
+    sjuText.style.opacity = '0';
+
+    // Calculate menu size for expansion (make square)
+    const menuSize = getMenuSize();
+    const expandSize = Math.max(70, menuSize.width + 12);
+
+    // Animate the square to expand at the pointer (no offset)
+    setTimeout(() => {
+      square.style.transition =
+        'width 0.32s cubic-bezier(.4,1.4,.6,1), ' +
+        'height 0.32s cubic-bezier(.4,1.4,.6,1), ' +
+        'opacity 0.12s, ' +
+        'transform 0.32s cubic-bezier(.4,1.4,.6,1)';
+      square.style.width = expandSize + 'px';
+      square.style.height = expandSize + 'px';
+      square.style.left = relX + 'px';
+      square.style.top = relY + 'px';
+      square.style.transformOrigin = 'top left';
+      square.style.transform = 'scale(1)';
+
+      // Show the blurred sju text as the square expands
+      setTimeout(() => {
+        square.classList.add('show-blur-text');
+      }, 60);
+
+      // After expansion, show the menu at the pointer (no offset)
+      setTimeout(() => {
+        // Position menu at the pointer, but keep inside viewport
+        let menuX = relX;
+        let menuY = relY;
+        if (menuX + expandSize > window.innerWidth) {
+          menuX = window.innerWidth - expandSize - 4;
+        }
+        if (menuY + expandSize > window.innerHeight) {
+          menuY = window.innerHeight - expandSize - 4;
+        }
+        menu.style.width = expandSize + 'px';
+        menu.style.height = expandSize + 'px';
+        menu.style.left = menuX + 'px';
+        menu.style.top = menuY + 'px';
+        menu.style.display = 'block';
+        setTimeout(() => {
+          menu.style.opacity = '1';
+        }, 10);
+
+        // Fade out the square and sju text after menu is visible
+        setTimeout(() => {
+          square.style.opacity = '0';
+          square.classList.remove('show-blur-text');
+        }, 80);
+      }, 220);
+    }, 8);
+  });
+
+  // Hide menu and square on click outside
+  document.addEventListener('mousedown', function(e) {
+    if (!menu.contains(e.target)) {
+      menu.style.display = 'none';
+      menu.style.opacity = '0';
+      menu.style.width = 'auto';
+      menu.style.height = 'auto';
+      square.classList.remove('active', 'show-blur-text');
+      square.style.opacity = '0';
+      sjuText.style.opacity = '0';
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  });
+
+  window.addEventListener('scroll', function() {
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  });
+
+  // Custom menu actions
+  function handleCopy() {
+    let selectedText = window.getSelection().toString();
+    if (selectedText) {
+      navigator.clipboard.writeText(selectedText).then(() => {
+        consol.log('Copied: ' + selectedText);
+      }, () => {
+        consol.log('Copy failed.');
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        consol.log('Page URL copied!');
+      }, () => {
+        consol.log('Copy failed.');
+      });
+    }
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+
+  function handleShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        url: window.location.href
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        consol.log('Page URL copied! (Share not supported)');
+      });
+    }
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+
+  function handleRefresh() {
+    location.reload();
+  }
+
+  function handlePrint() {
+    window.print();
+    menu.style.display = 'none';
+    menu.style.opacity = '0';
+    menu.style.width = 'auto';
+    menu.style.height = 'auto';
+    square.classList.remove('active', 'show-blur-text');
+    square.style.opacity = '0';
+    sjuText.style.opacity = '0';
+  }
+</script>

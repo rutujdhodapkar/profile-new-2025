@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificates</title>
+  <!-- Krona One font for certificate titles -->
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BitmapFont';
+      src: url('BitmapFont.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      background: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      color: #fff;
+    }
+    .cert-page-title {
+      font-family: 'Krona One', Arial, sans-serif;
+      font-size: 2.5rem;
+      color: #fff;
+      margin-top: 48px;
+      margin-bottom: 36px;
+      letter-spacing: 0.04em;
+      text-align: center;
+      text-shadow: 0 2px 12px #0008, 0 0 2px #fff2;
+    }
+    .cert-scroll-wrapper {
+      position: relative;
+      width: 100vw;
+      max-width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+      transition: scroll-left 0.3s;
+      color: #fff;
+    }
+    .white-box {
+      background: rgba(255, 255, 255, 0); /* transparent box */
+      border: 2.5px solid #fff;           /* white border */
+      border-radius: 55px; /* More curve */
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0);
+      width: 340px;
+      height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: hidden;
+      transition: box-shadow 0.2s, background 0.2s, border-color 0.2s;
+      padding: 0 0 24px 0;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      flex-shrink: 0;
+      backdrop-filter: blur(2px);
+      color: #fff;
+      cursor: pointer; /* Indicate clickable */
+    }
+    .white-box:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0);
+      background: rgba(255, 255, 255, 0);
+      border-color: #fff;
+      filter: brightness(1.08);
+    }
+    .white-box img {
+      max-width: 90%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 45px; /* More curve for image */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+      margin-top: 24px;
+      margin-bottom: 18px;
+    }
+    .cert-title {
+      font-family: 'Krona One', 'BitmapFont', Arial, sans-serif;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 8px;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .cert-desc {
+      font-size: 0.98rem;
+      color: #fff;
+      margin-bottom: 12px;
+      text-align: center;
+      padding: 0 12px;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .cert-issued {
+      font-size: 0.93rem;
+      color: #fff;
+      text-align: center;
+      margin-top: auto;
+      margin-bottom: 0;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+
+    /* Hide scrollbar for all browsers */
+    .container {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* IE 10+ */
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .container::-webkit-scrollbar {
+      display: none; /* Chrome/Safari/Webkit */
+    }
+
+    /* Arrow styles */
+    .scroll-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(255,255,255,0.85);
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      opacity: 0.85;
+      outline: none;
+      user-select: none;
+    }
+    .scroll-arrow:active {
+      background: #eee;
+      color: #000;
+    }
+    .scroll-arrow.left {
+      left: 8px;
+    }
+    .scroll-arrow.right {
+      right: 8px;
+    }
+    .scroll-arrow[hidden] {
+      display: none !important;
+    }
+
+    /* Responsive: On small screens, enable horizontal scroll and show arrows if needed */
+    @media (max-width: 900px) {
+      .cert-page-title {
+        font-size: 2rem;
+        margin-top: 32px;
+        margin-bottom: 24px;
+      }
+      .cert-scroll-wrapper {
+        max-width: 100vw;
+        width: 100vw;
+        padding: 0 0;
+      }
+      .container {
+        gap: 20px;
+        padding: 0 32px;
+        width: 100vw;
+        max-width: 100vw;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        color: #fff;
+      }
+      .white-box {
+        width: 80vw;
+        max-width: 340px;
+        min-width: 240px;
+        color: #fff;
+        border-radius: 45px;
+      }
+      .scroll-arrow {
+        display: flex;
+      }
+    }
+    @media (max-width: 600px) {
+      .cert-page-title {
+        font-size: 1.3rem;
+        margin-top: 18px;
+        margin-bottom: 12px;
+      }
+      .container {
+        gap: 12px;
+        padding: 0 16px;
+        color: #fff;
+      }
+      .white-box {
+        width: 90vw;
+        max-width: 320px;
+        min-width: 180px;
+        color: #fff;
+        border-radius: 40px;
+      }
+    }
+    /* Hide arrows by default on desktop */
+    .scroll-arrow {
+      display: none;
+    }
+    @media (max-width: 900px) {
+      .scroll-arrow {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cert-page-title">Certificates</div>
+  <div class="cert-scroll-wrapper">
+    <button class="scroll-arrow left" id="scrollLeft" aria-label="Scroll left" hidden>&#8592;</button>
+    <div class="container" id="certContainer">
+      <!-- Certificate cards will be inserted here by JS -->
+    </div>
+    <button class="scroll-arrow right" id="scrollRight" aria-label="Scroll right" hidden>&#8594;</button>
+  </div>
+  <script>
+    // Fetch certificate data from data.csv and render cards
+    // Assumes data.csv is in the same directory and has columns: cimg,ctitle,cdesc,cissue,clink
+
+    function createCertBox({cimg, ctitle, cdesc, cissue, clink}) {
+      // Create the white-box div
+      const box = document.createElement('div');
+      box.className = 'white-box';
+
+      // Image
+      const img = document.createElement('img');
+      img.src = cimg;
+      img.alt = ctitle || 'Certificate Image';
+      box.appendChild(img);
+
+      // Title
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'cert-title';
+      titleDiv.textContent = ctitle || '';
+      box.appendChild(titleDiv);
+
+      // Description
+      const descDiv = document.createElement('div');
+      descDiv.className = 'cert-desc';
+      descDiv.textContent = cdesc || '';
+      box.appendChild(descDiv);
+
+      // Issued on
+      const issuedDiv = document.createElement('div');
+      issuedDiv.className = 'cert-issued';
+      issuedDiv.textContent = cissue ? ('Issued on: ' + cissue) : '';
+      box.appendChild(issuedDiv);
+
+      // Make box clickable if clink exists and is not empty
+      if (clink && clink.trim() !== '') {
+        box.style.cursor = 'pointer';
+        box.tabIndex = 0;
+        box.setAttribute('role', 'link');
+        box.addEventListener('click', function(e) {
+          // Don't trigger if user is selecting text
+          if (window.getSelection && window.getSelection().toString()) return;
+          window.open(clink, '_blank');
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.open(clink, '_blank');
+          }
+        });
+        // Optional: add a subtle hover effect for links
+        box.addEventListener('mouseover', function() {
+          box.style.filter = 'brightness(1.10)';
+        });
+        box.addEventListener('mouseout', function() {
+          box.style.filter = '';
+        });
+      }
+
+      return box;
+    }
+
+    // Parse CSV string to array of objects
+    function parseCSV(csv, delimiter = ',') {
+      const lines = csv.trim().split('\n');
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(delimiter).map(h => h.trim());
+      return lines.slice(1).map(line => {
+        // Handle quoted fields and commas inside quotes
+        const values = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0; i < line.length; ++i) {
+          const char = line[i];
+          if (char === '"' && (i === 0 || line[i-1] !== '\\')) {
+            inQuotes = !inQuotes;
+          } else if (char === delimiter && !inQuotes) {
+            values.push(cur.replace(/^"|"$/g, '').replace(/\\"/g, '"').trim());
+            cur = '';
+          } else {
+            cur += char;
+          }
+        }
+        values.push(cur.replace(/^"|"$/g, '').replace(/\\"/g, '"').trim());
+        const obj = {};
+        headers.forEach((h, idx) => obj[h] = values[idx] || ''
+        );
+        return obj;
+      });
+    }
+
+    // Fetch and render certificates
+    function loadCertificates() {
+      fetch('data.csv')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load data.csv');
+          return response.text();
+        })
+        .then(csv => {
+          const certs = parseCSV(csv);
+          const container = document.getElementById('certContainer');
+          container.innerHTML = '';
+          certs.forEach(cert => {
+            // Only add if cimg, ctitle, cdesc, cissue exist
+            if (cert.cimg && cert.ctitle && cert.cdesc && cert.cissue) {
+              container.appendChild(createCertBox(cert));
+            }
+          });
+          updateArrows();
+        })
+        .catch(err => {
+          const container = document.getElementById('certContainer');
+          container.innerHTML = '<div style="color:#fff;text-align:center;padding:2em;">Failed to load certificates.<br>' + err.message + '</div>';
+        });
+    }
+
+    // Only show arrows if content overflows horizontally (on small screens)
+    function updateArrows() {
+      const container = document.getElementById('certContainer');
+      const leftArrow = document.getElementById('scrollLeft');
+      const rightArrow = document.getElementById('scrollRight');
+      // Only on small screens
+      if (window.innerWidth > 900) {
+        leftArrow.hidden = true;
+        rightArrow.hidden = true;
+        return;
+      }
+      // Show/hide arrows based on scroll position and overflow
+      const scrollLeft = container.scrollLeft;
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      leftArrow.hidden = scrollLeft <= 5;
+      rightArrow.hidden = scrollLeft >= maxScrollLeft - 5;
+      // If not overflowing, hide both
+      if (container.scrollWidth <= container.clientWidth + 2) {
+        leftArrow.hidden = true;
+        rightArrow.hidden = true;
+      }
+    }
+
+    function scrollContainerBy(amount) {
+      const container = document.getElementById('certContainer');
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    document.getElementById('scrollLeft').addEventListener('click', function() {
+      // Scroll left by one box width
+      const box = document.querySelector('.white-box');
+      scrollContainerBy(-(box ? box.offsetWidth + 20 : 300));
+    });
+    document.getElementById('scrollRight').addEventListener('click', function() {
+      const box = document.querySelector('.white-box');
+      scrollContainerBy(box ? box.offsetWidth + 20 : 300);
+    });
+
+    // Update arrows on scroll and resize
+    const certContainer = document.getElementById('certContainer');
+    certContainer.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    // Initial update and load certificates
+    window.addEventListener('DOMContentLoaded', function() {
+      loadCertificates();
+      updateArrows();
+    });
+  </script>
+</body>
+</html>
+
