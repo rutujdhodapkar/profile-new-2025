@@ -3,7 +3,7 @@
 
 import os
 import pandas as pd
-from flask import Flask, send_file, abort, request, jsonify
+from flask import Flask, send_file, abort, request, jsonify, Response
 
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 STATIC_DIR = os.path.join(ROOT_DIR, "static")
@@ -181,6 +181,21 @@ def serve_any_page(page):
     if not os.path.isfile(safe_path):
         abort(404)
     return send_file(safe_path)
+
+# Route to serve .woff font files from the static directory
+@app.route('/font/<path:filename>')
+def serve_woff_file(filename):
+    # Only allow .woff files
+    if not filename.lower().endswith('.woff'):
+        abort(404)
+    font_path = os.path.normpath(os.path.join(STATIC_DIR, "font", filename))
+    # Prevent directory traversal
+    if not font_path.startswith(os.path.abspath(os.path.join(STATIC_DIR, "font"))):
+        abort(403)
+    if not os.path.isfile(font_path):
+        abort(404)
+    # Set correct mimetype for woff fonts
+    return send_file(font_path, mimetype="font/woff")
 
 if __name__ == '__main__':
     app.run(
