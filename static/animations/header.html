@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <style>
+    /* Navigation Container with smooth transition */
+    #rectiangleNavbar {
+      position: absolute; /* Start as absolute, then switch to fixed */
+      left: 50%;
+      transform: translateX(-50%);
+      width: fit-content;
+      padding: 10px 20px;
+      background: rgba(181, 181, 181, 0.093);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 200px;
+      z-index: 9999;
+      transition: all 0.5s ease-in-out; /* Smooth transition for all properties */
+    }
+  
+    /* Hide navigation on small screens */
+    @media only screen and (max-width: 768px) {
+      #rectiangleNavbar {
+        display: none;
+      }
+    }
+  
+    /* Navigation list */
+    #rectiangleNavbar .page-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+  
+    #rectiangleNavbar .page-nav li {
+      cursor: pointer;
+      padding: 8px 15px;
+      transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Added transform transition */
+      border-radius: 50px;
+      position: relative;
+    }
+  
+    /* Light theme text color */
+    body:not(.dark-mode) #rectiangleNavbar .page-nav li {
+      color: black;
+    }
+  
+    /* Dark theme text color */
+    body.dark-mode #rectiangleNavbar .page-nav li {
+      color: white;
+    }
+  
+    #rectiangleNavbar .page-nav li:hover {
+      background-color: #5b5b5b69;
+      color: white;
+      transform: scale(1.1); /* Slightly enlarge on hover */
+    }
+  
+    /* New Highlight Element */
+    .highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #5b5b5b69;
+      transition: left 0.5s ease, width 0.5s ease; /* Smooth slide transition */
+      border-radius: 50px;
+      z-index: -1; /* Ensure highlight is behind text */
+    }
+  
+    /* Remove underlines from navigation links */
+    #rectiangleNavbar a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Basic page styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div id="rectiangleNavbar" class="rectriangle">
+    <nav class="page-nav">
+      <ul>
+        <li data-section="home"><a href="#home"><strong>Home</strong></a></li>
+        <li data-section="about"><a href="#about"><strong>About</strong></a></li>
+        <li data-section="skills"><a href="#skills"><strong>Skills</strong></a></li>
+        <li data-section="certificates"><a href="#certificates"><strong>Certificates</strong></a></li>
+        <li data-section="projects"><a href="#projects"><strong>Projects</strong></a></li>
+        <li data-section="contact"><a href="#contact"><strong>Contact</strong></a></li>
+        <div class="highlight"></div>
+      </ul>
+    </nav>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.innerWidth > 768) {
+        const navbar = document.getElementById('rectiangleNavbar');
+        const aboutSection = document.getElementById('about'); // About section
+        const sections = document.querySelectorAll("section"); // All sections
+        const navItems = document.querySelectorAll("#rectiangleNavbar .page-nav li");
+        const highlight = document.querySelector("#rectiangleNavbar .highlight");
+        const stickyOffset = 25; // Stick at 25px from the top
+  
+        // 🔥 **Key Fix: Setting Navbar Exactly Above About Section**
+        function getInitialOffset() {
+          return aboutSection.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 20;
+        }
+  
+        let initialOffset = getInitialOffset(); // Set on load
+  
+        // Set navbar position correctly from the start
+        navbar.style.position = 'absolute';
+        navbar.style.top = `${initialOffset}px`;
+  
+        function updateNavbarPosition() {
+          if (window.scrollY >= initialOffset) {
+            navbar.style.position = 'fixed';
+            navbar.style.top = `${stickyOffset}px`;
+            navbar.style.opacity = '1'; // Ensure full opacity when fixed
+          } else {
+            navbar.style.position = 'absolute';
+            navbar.style.top = `${initialOffset}px`;
+            navbar.style.opacity = '0.8'; // Slightly transparent when absolute
+          }
+        }
+  
+        window.addEventListener('scroll', updateNavbarPosition);
+        window.addEventListener('resize', () => {
+          initialOffset = getInitialOffset(); // Update on resize
+          updateNavbarPosition();
+        });
+  
+        updateNavbarPosition(); // Run once on load
+  
+        // 🎯 **Smooth Scroll Fix and Highlight Active Section**
+        navItems.forEach(item => {
+          item.addEventListener("click", function(event) {
+            event.preventDefault();
+            const targetId = this.getAttribute("data-section");
+            if (targetId === "home") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              const targetSection = document.getElementById(targetId);
+              if (targetSection) {
+                targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }
+            // Highlight the active section
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            updateHighlight();
+          });
+        });
+
+        // Highlight the current section on scroll
+        window.addEventListener('scroll', function() {
+          let currentSection = '';
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop - 50;
+            if (window.scrollY >= sectionTop) {
+              currentSection = section.getAttribute('id');
+            }
+          });
+          navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-section') === currentSection) {
+              item.classList.add('active');
+            }
+          });
+          updateHighlight();
+        });
+
+        function updateHighlight() {
+          const activeItem = document.querySelector("#rectiangleNavbar .page-nav li.active");
+          if (activeItem) {
+            const { offsetLeft, offsetWidth, offsetHeight } = activeItem;
+            highlight.style.left = `${offsetLeft}px`;
+            highlight.style.width = `${offsetWidth}px`;
+            highlight.style.height = `${offsetHeight}px`; // Adjust height to cover full text as a box
+          }
+        }
+
+        updateHighlight(); // Initial highlight position
+      }
+    });
+  </script>
+</body>
+<style>
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
+  </style>
+
+
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio -Rutuj Dhodapkar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 200vh; /* So we can scroll for the reveal */
+      margin: 0;
+      font-family: 'Krona One', 'Doto', Arial, sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 0.01em;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    /* Rain pattern overlay styles */
+    #rain-pattern-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    #rain-pattern-overlay.active {
+      opacity: 1;
+      pointer-events: none;
+    }
+    .main-center-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .main-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      z-index: 2;
+      pointer-events: auto;
+      margin-left: 6vw;
+    }
+    .hello {
+      font-size: 3.2rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.1;
+      font-family: 'Krona One', 'Doto', Arial, sans-serif;
+    }
+    .name-box {
+      background: #fff;
+      color: #000;
+      padding: 0.5em 0.5em 0.5em 1.2em;
+      border-radius: 0.45em; /* <-- Add a little curve to the box */
+      font-size: 3.2rem;
+      font-weight: bold;
+      display: inline-block;
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+      min-width: 2ch;
+      position: relative;
+      white-space: pre;
+      max-width: fit-content;
+      font-family: 'Krona One', 'Doto', Arial, sans-serif;
+    }
+    .typing-caret {
+      display: inline-block;
+      width: 0.55em;
+      height: 0.55em;
+      border-radius: 50%;
+      background: #000;
+      color: #000;
+      margin-left: 0.15em;
+      margin-bottom: 0.35em;
+      animation: blink-caret 1s steps(1) infinite;
+      font-weight: bold;
+      font-size: inherit;
+      opacity: 1;
+      transition: opacity 0.2s;
+      position: relative;
+      left: 0.1ch;
+      vertical-align: bottom;
+    }
+    @keyframes blink-caret {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Get Connected Button Styles */
+    .get-connected-container {
+      margin-top: 2.2rem;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.7em;
+    }
+    .get-connected-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7em;
+      font-family: 'Doto', 'Krona One', Arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #fff;
+      background: transparent;
+      border: 2px solid #fff;
+      border-radius: 2em;
+      padding: 0.55em 1.5em 0.55em 1.2em;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      outline: none;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+      user-select: none;
+      overflow: hidden; /* Needed for the light effect */
+    }
+    /* Light effect for Get Connected button */
+    .get-connected-btn .light-effect {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.0) 100%);
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 1;
+      transform: skewX(-18deg);
+      transition: left 0.45s cubic-bezier(.4,1.2,.6,1);
+    }
+    .get-connected-btn:hover .light-effect,
+    .get-connected-btn:focus .light-effect {
+      left: 110%;
+      transition: left 0.45s cubic-bezier(.4,1.2,.6,1);
+    }
+    .get-connected-btn:hover, .get-connected-btn:focus {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-color: #fff;
+    }
+    .arrow-inside-btn {
+      display: inline-block;
+      width: 1.3em;
+      height: 1.3em;
+      vertical-align: middle;
+      z-index: 2;
+      position: relative;
+    }
+    /* Blogs Button Styles */
+    .blogs-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6em;
+      font-family: 'Doto', 'Krona One', Arial, sans-serif;
+      font-size: 1.13rem;
+      font-weight: bold;
+      color: #000;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 2em;
+      padding: 0.48em 1.3em 0.48em 1.1em;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      outline: none;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.08);
+      user-select: none;
+      overflow: hidden;
+    }
+    .blogs-btn:hover, .blogs-btn:focus {
+      background: #f5f5f5;
+      color: #000;
+      border-color: #fff;
+    }
+    .arrow-topright-btn {
+      display: inline-block;
+      width: 1.1em;
+      height: 1.1em;
+      vertical-align: middle;
+      z-index: 2;
+      position: relative;
+    }
+    @media (max-width: 600px) {
+      .get-connected-btn {
+        font-size: 1rem;
+        padding: 0.45em 1.1em 0.45em 1em;
+      }
+      .arrow-inside-btn {
+        width: 1em;
+        height: 1em;
+      }
+      .blogs-btn {
+        font-size: 0.95rem;
+        padding: 0.38em 1em 0.38em 0.8em;
+      }
+      .arrow-topright-btn {
+        width: 0.9em;
+        height: 0.9em;
+      }
+    }
+
+    /* Circle reveal styles */
+    .circle-reveal {
+      position: fixed;
+      left: 50%;
+      bottom: -1000px; /* Start well below the viewport */
+      transform: translateX(-50%) scale(0.1);
+      width: 5000px;
+      height: 5000px;
+      background: #fff;
+      border-radius: 50%;
+      z-index: 1000;
+      pointer-events: none;
+      transition: 
+        transform 0.7s cubic-bezier(.4,1.2,.6,1),
+        bottom 0.7s cubic-bezier(.4,1.2,.6,1);
+      will-change: transform, bottom;
+      box-shadow: 0 0 80px 0 rgba(0,0,0,0.18);
+    }
+    .circle-reveal.active {
+      bottom: 0;
+      transform: translateX(-50%) scale(1.2);
+      transition: 
+        transform 0.9s cubic-bezier(.4,1.2,.6,1),
+        bottom 0.9s cubic-bezier(.4,1.2,.6,1);
+    }
+    .content {
+      position: relative;
+      z-index: 2;
+      color: #111;
+      font-family: 'Krona One', 'Doto', Arial, sans-serif;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-top: 40vh;
+      transition: color 0.5s;
+      pointer-events: none;
+    }
+    .circle-reveal.active ~ .content {
+      color: #fff;
+      transition: color 0.5s;
+    }
+
+    /* Number style */
+    .number {
+      position: fixed;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 220px;
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 2px #ffff;
+      opacity: 0.3;
+    }
+
+    /* Sign Up Button Styles */
+    .sign-up-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-family: 'Doto', Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background: transparent;
+      border: 2px solid #fff;
+      border-radius: 2em;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      outline: none;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .sign-up-btn:hover, .sign-up-btn:focus {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-color: #fff;
+    }
+    .arrow-topright-signup {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* Scroll prompt styles */
+    .scroll-prompt {
+      position: fixed;
+      bottom: 5%; /* Moved further down */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff;
+      font-family: 'Doto', Arial, sans-serif;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 1001;
+    }
+    .scroll-prompt.active {
+      opacity: 1;
+    }
+    .scroll-prompt .circle {
+      width: 40px; /* Smaller size */
+      height: 40px; /* Smaller size */
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      animation: pulse 2s infinite;
+    }
+    .scroll-prompt .arrow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      animation: bounce 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+    @keyframes bounce {
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(5px);
+      }
+    }
+
+    /* Blur overlay animation */
+    .blur-overlay {
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      opacity: 1;
+      transition: opacity 1.2s cubic-bezier(.4,1.2,.6,1);
+      will-change: opacity;
+    }
+    .blur-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.2s cubic-bezier(.4,1.2,.6,1);
+    }
+  </style>
+  <script>
+    // Redirect to mobile.html if width is less than 1110
+    (function() {
+      function redirectIfMobile() {
+        if (window.innerWidth < 1110) {
+          window.location.href = "mobile.html";
+        }
+      }
+      redirectIfMobile();
+      window.addEventListener('resize', redirectIfMobile);
+    })();
+  </script>
+</head>
+<body>
+  <!-- Rain pattern overlay (hidden initially) -->
+  <div id="rain-pattern-overlay"></div>
+  <div class="blur-overlay" id="blurOverlay"></div>
+  <button class="sign-up-btn" onclick="window.location.href='signup.html'">
+    Sign Up
+    <span class="arrow-topright-signup">
+      <!-- SVG arrow top-right -->
+      <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="7 17 17 7"/>
+        <polyline points="9 7 17 7 17 15"/>
+      </svg>
+    </span>
+  </button>
+  <div class="main-center-container">
+    <div class="main-message">
+      <div class="hello">Hello There!!!</div>
+      <div style="font-size: 3.2rem; font-weight: bold; font-family: 'Krona One', 'Doto', Arial, sans-serif;">
+        I'm <span class="name-box"><b id="typed-name"></b><span class="typing-caret"></span></span>
+      </div>
+      <div class="get-connected-container">
+        <button class="get-connected-btn" onclick="window.location.href='contact.html'">
+          <span class="light-effect"></span>
+          Get connected
+          <span class="arrow-inside-btn">
+            <!-- SVG arrow down-right -->
+            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 7 L17 17"/>
+              <polyline points="10 17 17 17 17 10"/>
+            </svg>
+          </span>
+        </button>
+        <button class="blogs-btn" onclick="window.open('https://rutujdhodapkar.vercel.app', '_blank')">
+          Research
+          <span class="arrow-topright-btn">
+            <!-- SVG arrow top-right -->
+            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="7 17 17 7"/>
+              <polyline points="9 7 17 7 17 15"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="circle-reveal" id="circleReveal"></div>
+  <div class="content">
+    <div style="font-size:1.2rem; margin-top:2em;"></div>
+  </div>
+  <div class="number">01</div>
+  <div class="scroll-prompt" id="scrollPrompt">
+    <div class="circle">
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+    <div>Scroll for more</div>
+  </div>
+  <script>
+    // Blur out animation on load
+    window.addEventListener('DOMContentLoaded', function() {
+      const blur = document.getElementById('blurOverlay');
+      setTimeout(() => {
+        blur.classList.add('hide');
+      }, 900); // Start fade after 0.9s
+      setTimeout(() => {
+        blur.style.display = 'none';
+      }, 2200); // Remove from DOM after animation
+    });
+
+    // Fetch name from data.csv and use it for typing animation
+    fetch('data.csv')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(data => {
+        const rows = data.split('\n');
+        const headers = rows[0].split(',');
+        const nameIndex = headers.indexOf('name');
+        if (nameIndex === -1 || rows.length < 2) {
+          window.location.href = "error.html";
+          return;
+        }
+        const nameToType = rows[1].split(',')[nameIndex].trim(); // Assuming the name is in the second row
+
+        const typedNameElem = document.getElementById('typed-name');
+        const caretElem = document.querySelector('.typing-caret');
+        let idx = 0;
+        let caretStableTimeout = null;
+        let caretHideTimeout = null;
+
+        // Define a sequence of delays (ms) for each letter, longer for spaces and after capital letters
+        const baseDelays = Array.from(nameToType).map(char => char === ' ' ? 920 : 300);
+
+        function setCaretStable() {
+          caretElem.style.animation = "none";
+          caretElem.style.opacity = "1";
+        }
+        function setCaretBlinking() {
+          caretElem.style.animation = "blink-caret 1s steps(1) infinite";
+          caretElem.style.opacity = "1";
+        }
+        function hideCaret() {
+          caretElem.style.animation = "none";
+          caretElem.style.opacity = "0";
+        }
+
+        function typeName() {
+          if (idx <= nameToType.length) {
+            typedNameElem.textContent = nameToType.slice(0, idx);
+            if (idx < nameToType.length) {
+              // On each letter, make caret stable for 0.5s, then resume blinking
+              setCaretStable();
+              if (caretStableTimeout) clearTimeout(caretStableTimeout);
+              caretStableTimeout = setTimeout(setCaretBlinking, 500);
+
+              let delay = baseDelays[idx] || 300;
+              idx++;
+              setTimeout(typeName, delay);
+            } else {
+              // After typing is done, keep caret blinking for 5s, then hide
+              setCaretBlinking();
+              if (caretHideTimeout) clearTimeout(caretHideTimeout);
+              caretHideTimeout = setTimeout(hideCaret, 5000);
+            }
+          }
+        }
+        // Start typing after a short delay for effect
+        setTimeout(typeName, 700);
+      })
+      .catch(error => {
+        console.error('Error fetching the name:', error);
+        window.location.href = "error.html";
+      });
+
+    // Circle reveal scroll logic
+    const circle = document.getElementById('circleReveal');
+    const scrollPrompt = document.getElementById('scrollPrompt');
+    let revealed = false;
+    let aboutRedirected = false;
+
+    // Show scroll prompt after 5 seconds
+    setTimeout(() => {
+      scrollPrompt.classList.add('active');
+    }, 5000);
+
+    function handleScroll() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const triggerPoint = window.innerHeight * 0.2; // 20% scroll triggers
+
+      if (scrollY > triggerPoint && !revealed) {
+        circle.classList.add('active');
+        revealed = true;
+
+        // Wait for the animation to finish, then redirect to 
+        // The transition duration is 0.9s, so use a slightly longer timeout
+        if (!aboutRedirected) {
+          aboutRedirected = true;
+          setTimeout(function() {
+            window.location.href = "detail.html";
+          }, 950); // 0.95s to match the animation
+        }
+
+      } else if (scrollY <= triggerPoint && revealed) {
+        circle.classList.remove('active');
+        revealed = false;
+        aboutRedirected = false; // Allow re-trigger if user scrolls up and down again
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Show rain pattern animation in background after 5 seconds
+    setTimeout(function() {
+      var overlay = document.getElementById('rain-pattern-overlay');
+      if (overlay) {
+        // Only inject once
+        if (!overlay.hasChildNodes()) {
+          // Use <object> to embed the HTML animation
+          var obj = document.createElement('object');
+          obj.type = 'text/html';
+          obj.data = 'animations/rain pattern.html';
+          obj.style.width = '100vw';
+          obj.style.height = '100vh';
+          obj.style.pointerEvents = 'none';
+          obj.style.display = 'block';
+          obj.style.position = 'absolute';
+          obj.style.top = '0';
+          obj.style.left = '0';
+          overlay.appendChild(obj);
+        }
+        overlay.classList.add('active');
+      }
+    }, 5000);
+  </script>
+</body>
