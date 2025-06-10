@@ -124,48 +124,18 @@
     }
   </style>
   <script>
-    // Utility function to check if any column data is accessible in CSV
-    function hasAnyColumnData(csvText) {
-      // Split into lines, skip empty lines
-      const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
-      if (lines.length < 2) return false; // No data rows
-      // Check if at least one data row has any non-empty column
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',');
-        if (cols.some(col => col.trim().length > 0)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-      fetch('data.csv')
-        .then(function(response) {
-          if (!response.ok) throw new Error('File not accessible');
-          return response.text();
-        })
-        .then(function(csvText) {
-          if (!hasAnyColumnData(csvText)) {
-            // window.location.href = 'error.html';
-          }
-          
-          // If accessible and has data, render skills as normal
-          var totalCircles = 20;
-          document.querySelectorAll('.skill-circles-bg').forEach(function(bg) {
-            var percent = parseInt(bg.getAttribute('data-percent'), 10) || 0;
-            var filledCount = Math.round((percent / 100) * totalCircles);
-            bg.innerHTML = '';
-            for (var i = 0; i < totalCircles; i++) {
-              var circle = document.createElement('span');
-              circle.className = 'skill-circle' + (i < filledCount ? ' filled' : '');
-              bg.appendChild(circle);
-            }
-          });
-        })
-        .catch(function() {
-          // window.location.href = 'error.html';
-        });
+      var totalCircles = 20;
+      document.querySelectorAll('.skill-circles-bg').forEach(function(bg) {
+        var percent = parseInt(bg.getAttribute('data-percent'), 10) || 0;
+        var filledCount = Math.round((percent / 100) * totalCircles);
+        bg.innerHTML = '';
+        for (var i = 0; i < totalCircles; i++) {
+          var circle = document.createElement('span');
+          circle.className = 'skill-circle' + (i < filledCount ? ' filled' : '');
+          bg.appendChild(circle);
+        }
+      });
     });
   </script>
 </head>
