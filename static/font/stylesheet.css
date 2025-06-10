@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'DotoPixel';
-    src: url('DotoPixel.woff2') format('woff2'),
-        url('DotoPixel.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
