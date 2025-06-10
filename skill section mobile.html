@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Section</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BitmapFont';
+      src: url('BitmapFont.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    html, body {
+      background: #00000000 !important;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      height: 100vh;
+    }
+    body {
+      min-height: 100vh;
+      width: 100vw;
+    }
+    .skills-container {
+      width: auto;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      background: transparent;
+      position: static;
+      z-index: auto;
+      padding: 0;
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
+    .skill-bar-row {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      width: auto;
+      max-width: none;
+      justify-content: center;
+      gap: 28px;
+    }
+    .skill-label {
+      display: inline-block;
+      width: 110px;
+      color: #fff;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .skill-circles-bg {
+      display: flex;
+      align-items: center;
+      margin-left: 0;
+      gap: 8px;
+      height: 32px;
+      min-width: 100px;
+      flex-shrink: 1;
+    }
+    .skill-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #222;
+      border: 2.5px solid #222;
+      display: inline-block;
+      transition: background 0.3s, border 0.3s;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .skill-circle.filled {
+      background: #fff;
+      border: 2.5px solid #fff;
+    }
+    .skill-circles-bg:hover .skill-circle.filled {
+      background: #d8d8d8;
+      border: 2.5px solid #d8d8d8;
+    }
+    .skill-bar-percent {
+      position: relative;
+      z-index: 2;
+      padding-left: 16px;
+      color: #fff;
+      font-size: 1.7rem;
+      font-weight: 600;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      min-width: 48px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 36px;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-family: 'Krona One', Arial, sans-serif;
+      font-size: 2.3rem;
+      line-height: 2.7rem;
+      padding: 0 2px;
+      margin-top: 0;
+    }
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
+    @media (max-width: 600px) {
+      .skills-container {
+        padding-top: 0;
+      }
+      h2 {
+        font-size: 1.7rem;
+        margin-bottom: 22px;
+        padding: 0 2vw;
+      }
+      .skill-bar-row {
+        margin-bottom: 14px;
+        gap: 18px;
+      }
+      .skill-label {
+        width: 80px;
+        font-size: 1.25rem;
+      }
+      .skill-circles-bg {
+        min-width: 60px;
+        gap: 5px;
+        height: 18px;
+      }
+      .skill-circle, .skill-circle.filled, .skill-circles-bg:hover .skill-circle.filled {
+        width: 10px;
+        height: 10px;
+        border-width: 1.5px;
+      }
+      .skill-bar-percent {
+        font-size: 1.1rem;
+        min-width: 24px;
+        padding-left: 8px;
+      }
+    }
+    @media (max-width: 400px) {
+      .skills-container {
+        padding-top: 0;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+      }
+    }
+  </style>
+  <script>
+    // Utility function to check if any column data is accessible in CSV
+    function hasAnyColumnData(csvText) {
+      // Split into lines, skip empty lines
+      const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) return false; // No data rows
+      // Check if at least one data row has any non-empty column
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        if (cols.some(col => col.trim().length > 0)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('data.csv')
+        .then(function(response) {
+          if (!response.ok) throw new Error('File not accessible');
+          return response.text();
+        })
+        .then(function(csvText) {
+          if (!hasAnyColumnData(csvText)) {
+            // window.location.href = 'error.html';
+          }
+          // If accessible and has data, render skills as normal
+          var totalCircles = (window.innerWidth <= 600) ? 14 : 24;
+          document.querySelectorAll('.skill-circles-bg').forEach(function(bg) {
+            var percent = parseInt(bg.getAttribute('data-percent'), 10) || 0;
+            var filledCount = Math.round((percent / 100) * totalCircles);
+            bg.innerHTML = '';
+            for (var i = 0; i < totalCircles; i++) {
+              var circle = document.createElement('span');
+              circle.className = 'skill-circle' + (i < filledCount ? ' filled' : '');
+              bg.appendChild(circle);
+            }
+          });
+        })
+        .catch(function() {
+        //   window.location.href = 'error.html';
+        });
+    });
+  </script>
+</head>
+<body>
+  <div class="skills-container">
+    <h2>Programming Languages I use most</h2>
+    <div class="skill-bar-row">
+      <span class="skill-label">Python</span>
+      <div class="skill-circles-bg" data-percent="50"></div>
+      <span class="skill-bar-percent">50%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">Java</span>
+      <div class="skill-circles-bg" data-percent="15"></div>
+      <span class="skill-bar-percent">15%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">R</span>
+      <div class="skill-circles-bg" data-percent="11"></div>
+      <span class="skill-bar-percent">11%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">Node.js</span>
+      <div class="skill-circles-bg" data-percent="10"></div>
+      <span class="skill-bar-percent">10%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">JavaScript</span>
+      <div class="skill-circles-bg" data-percent="14"></div>
+      <span class="skill-bar-percent">14%</span>
+    </div>
+  </div>
+</body>
+

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Other Projects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Krona One font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'DotoPixel';
+      src: url('https://raw.githubusercontent.com/rutujdhodapkar/Font/main/DotoPixel.woff') format('woff');
+      font-display: swap;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      background: transparent !important;
+      color: #fff;
+      font-family: 'DotoPixel', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      letter-spacing: 0.01em;
+      font-size: 1.18em;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Overlay the content above the background animation */
+    .container {
+      max-width: 1100px;
+      margin: 48px auto;
+      padding: 0 18px;
+      background: none;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 38px;
+      font-size: 2.7em;
+      letter-spacing: 2px;
+      color: #fff;
+      font-family: 'Krona One', Arial, sans-serif;
+      /* Enhanced shadow for "Other Projects" */
+      text-shadow:
+        0 2px 12px #0008,
+        0 4px 24px #000000,
+        0 1px 0 #000000,
+        0 0px 2px #000000;
+    }
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+      justify-content: center;
+      align-items: stretch;
+      padding: 0;
+    }
+    .project-card {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      min-height: 180px;
+      background: rgba(20, 20, 20, 0.38);
+      border-radius: 18px;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 rgba(255,255,255,0.08) inset;
+      overflow: visible;
+      transition: box-shadow 0.18s, background 0.18s;
+      margin: 0;
+      padding: 28px 32px 28px 28px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      /* subtle dark glass effect */
+    }
+    .project-card:hover {
+      box-shadow: 0 8px 40px #000b, 0 1.5px 0 #fff2 inset;
+      background: rgba(30, 30, 30, 0.48);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+    .project-img-wrapper {
+      flex: 0 0 30%;
+      max-width: 30%;
+      min-width: 120px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      position: relative;
+      margin-right: 2.5%;
+    }
+    .project-img-border {
+      border-radius: 18px;
+      border: 3px solid #fff;
+      padding: 8px;
+      background: none;
+      display: inline-block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+    }
+    .project-img {
+      width: 100%;
+      height: auto;
+      min-width: 0;
+      min-height: 0;
+      max-width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      aspect-ratio: 4/3;
+      box-shadow: 0 2px 16px #0007;
+      background: #111;
+    }
+    .project-content {
+      flex: 0 0 70%;
+      max-width: 70%;
+      min-width: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background: none;
+      color: #fff;
+      font-family: 'DotoPixel', 'Segoe UI', Arial, sans-serif;
+      font-size: 1.18em;
+    }
+    .project-title {
+      font-size: 1.45em;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.13s;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+    .project-title:hover {
+      color: #ffffffb7;
+      text-shadow: 0 2px 8px #ffb30044;
+    }
+    .project-desc {
+      font-size: 1.13em;
+      margin-bottom: 22px;
+      color: #fff;
+      opacity: 0.95;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .project-footer {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-size: 1.08em;
+      color: #fff;
+      opacity: 0.88;
+      margin-top: 0;
+      gap: 22px;
+    }
+    .project-link {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: 600;
+      border: none;
+      border-radius: 0;
+      padding: 0 0 0 8px;
+      background: none;
+      transition: color 0.13s;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      font-size: 1.08em;
+      box-shadow: none;
+    }
+    .project-link:hover {
+      color: #ffb300;
+      background: none;
+      border: none;
+      text-decoration: underline;
+    }
+    @media (max-width: 900px) {
+      .container {
+        max-width: 99vw;
+        padding: 0 2vw;
+      }
+      .project-card {
+        width: 100%;
+        max-width: 99vw;
+        min-width: 0;
+        padding: 18px 8px 18px 8px;
+      }
+      .project-img-wrapper {
+        flex: 0 0 38vw;
+        max-width: 38vw;
+        min-width: 100px;
+        margin-right: 18px;
+      }
+      .project-content {
+        flex: 1 1 60vw;
+        max-width: 100vw;
+        font-size: 1.08em;
+      }
+    }
+    @media (max-width: 700px) {
+      .projects-list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 28px;
+      }
+      .project-card {
+        flex-direction: column;
+        width: 100%;
+        max-width: 99vw;
+        min-width: 0;
+        min-height: unset;
+        align-items: stretch;
+        padding: 14px 4vw 18px 4vw;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        background: rgba(20, 20, 20, 0.48);
+      }
+      .project-img-wrapper {
+        max-width: 100vw;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 16px;
+      }
+      .project-img-border {
+        width: 100%;
+        height: auto;
+        padding: 8px;
+      }
+      .project-img {
+        width: 100%;
+        height: 180px;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100vw;
+        max-height: 240px;
+        aspect-ratio: unset;
+      }
+      .project-content {
+        padding: 0;
+        max-width: 100vw;
+        font-size: 1.01em;
+      }
+    }
+    ::-webkit-scrollbar { width: 0; background: transparent; }
+    ::selection { background: #fff2; }
+
+    /* Make sure the background animation is always behind */
+    #no-signal-bg-iframe {
+      position: fixed;
+      z-index: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      pointer-events: none;
+      overflow: hidden;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Show the background as an iframe with the animation HTML file -->
+  <iframe
+    id="no-signal-bg-iframe"
+    src="animations/random%20onoff.html"
+    tabindex="-1"
+    aria-hidden="true"
+    frameborder="0"
+    scrolling="no"
+  ></iframe>
+  <div class="container">
+    <h1>Other Projects</h1>
+    <div class="projects-list" id="projects-list">
+      <!-- Project cards will be inserted here -->
+    </div>
+  </div>
+  <script>
+    // Helper: fetch CSV and parse to array of objects
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+      // Handle possible BOM
+      let firstLine = lines[0];
+      if (firstLine.charCodeAt(0) === 0xFEFF) {
+        firstLine = firstLine.slice(1);
+      }
+      const headers = firstLine.split(',').map(h => h.trim());
+      return lines.slice(1).map(line => {
+        // Handle quoted fields and commas in fields
+        const values = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0, c; i < line.length; ++i) {
+          c = line[i];
+          if (c === '"') {
+            if (inQuotes && line[i+1] === '"') { cur += '"'; ++i; }
+            else inQuotes = !inQuotes;
+          } else if (c === ',' && !inQuotes) {
+            values.push(cur);
+            cur = '';
+          } else {
+            cur += c;
+          }
+        }
+        values.push(cur);
+        const obj = {};
+        headers.forEach((h, idx) => obj[h] = (values[idx] || '').trim());
+        return obj;
+      });
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // Fetch CSV from GitHub raw URL
+    fetch('https://raw.githubusercontent.com/rutujdhodapkar/Profile/main/data.csv')
+      .then(resp => {
+        if (!resp.ok) throw new Error("Failed to load data.csv from GitHub");
+        return resp.text();
+      })
+      .then(csvText => {
+        const data = parseCSV(csvText);
+        // Only show rows with all required fields
+        const projects = data.filter(row =>
+          row.optitle && row.opdescription && row.opimgpath && row.opdate && row.oplink
+        );
+        const list = document.getElementById('projects-list');
+        if (projects.length === 0) {
+          list.innerHTML = '<div style="color:#bbb;font-size:1.1em;text-align:center;width:100%;">No projects found.</div>';
+          return;
+        }
+        projects.forEach(proj => {
+          // Use /image-by-path?img=... for images if needed
+          let imgSrc = proj.opimgpath;
+          if (!/^https?:\/\//.test(imgSrc)) {
+            imgSrc = 'image-by-path?img=' + encodeURIComponent(imgSrc);
+          }
+          const card = document.createElement('div');
+          card.className = 'project-card';
+          card.innerHTML = `
+            <div class="project-img-wrapper">
+              <span class="project-img-border">
+                <img class="project-img" src="${escapeHTML(imgSrc)}" alt="${escapeHTML(proj.optitle)}">
+              </span>
+            </div>
+            <div class="project-content">
+              <a class="project-title" href="${escapeHTML(proj.oplink)}" target="_blank" rel="noopener">${escapeHTML(proj.optitle)}</a>
+              <div class="project-desc">${escapeHTML(proj.opdescription)}</div>
+              <div class="project-footer">
+                <span>${escapeHTML(proj.opdate)}</span>
+                <a class="project-link" href="${escapeHTML(proj.oplink)}" target="_blank" rel="noopener">View &rarr;</a>
+              </div>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById('projects-list').innerHTML =
+          '<div style="color:#f66;font-size:1.1em;text-align:center;width:100%;">Failed to load projects.</div>';
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!-- Dotted lines background -->
+<iframe src="animations/dotted lines.html" style="width:100vw; height:100vh; border:none; position:fixed; top:0; left:0; z-index:-1; pointer-events:none;"></iframe>
+
+<style>
+  .frame-stack-container {
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 4vw 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4vw;
+    z-index: 1;
+  }
+  .frame-box {
+    width: 92vw;
+    max-width: 600px;
+    min-height: calc(100vh - 10vw);
+    background: rgba(255,255,255,0.10); /* Nearly fully transparent */
+    border-radius: 2.2rem;
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+    border: 2.5px solid rgba(224,224,224,0.18);
+    margin: 2vw 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+    position: relative;
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+  }
+  .frame-box iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    display: block;
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+  }
+  .frame-box iframe::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    background: transparent !important;
+  }
+  @media (max-width: 700px) {
+    .frame-box {
+      width: 96vw;
+      min-height: calc(100vh - 8vw);
+      border-radius: 1.5rem;
+      margin: 2vw 0;
+    }
+    .frame-stack-container {
+      gap: 3vw;
+      padding: 2vw 0;
+    }
+  }
+</style>
+
+<script>
+  // Disable scrolling in all iframes after they load
+  function disableIframeScroll(iframe) {
+    try {
+      // For same-origin iframes only
+      iframe.contentWindow.document.body.style.overflow = 'hidden';
+      iframe.contentWindow.document.documentElement.style.overflow = 'hidden';
+      // Hide scrollbars
+      iframe.contentWindow.document.body.style['-ms-overflow-style'] = 'none';
+      iframe.contentWindow.document.body.style['scrollbar-width'] = 'none';
+      // For webkit browsers
+      var style = iframe.contentWindow.document.createElement('style');
+      style.innerHTML = '::-webkit-scrollbar{display:none!important;width:0!important;background:transparent!important;}';
+      iframe.contentWindow.document.head.appendChild(style);
+    } catch (e) {
+      // Ignore cross-origin iframes
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.frame-box iframe').forEach(function(iframe) {
+      iframe.addEventListener('load', function() {
+        disableIframeScroll(iframe);
+      });
+    });
+  });
+</script>
+
+<div class="frame-stack-container">
+  <!-- Frame 1: info.html -->
+  <div class="frame-box" style="height:calc(100vh - 10vw);">
+    <iframe src="info.html" title="Info"></iframe>
+  </div>
+  <!-- Frame 2: skill mobile.html and skill section mobile.html (stacked vertically, NO line between) -->
+  <div class="frame-box" style="height:calc(100vh - 10vw); display:flex; flex-direction:column; gap:0; padding:0;">
+    <iframe src="skill mobile.html" title="Skill Squares" style="flex:1 1 50%; min-height:48%;"></iframe>
+    <iframe src="skill section mobile.html" title="Skill Circles" style="flex:1 1 50%; min-height:48%;"></iframe>
+  </div>
+  <!-- Frame 3: certificat.html -->
+  <div class="frame-box" style="height:calc(100vh - 10vw);">
+    <iframe src="certificat.html" title="Certificates"></iframe>
+  </div>
+  <!-- Frame 4: project mobile.html -->
+  <div class="frame-box" style="height:calc(100vh - 10vw);">
+    <iframe src="project mobile.html" title="Projects"></iframe>
+  </div>
+</div>
