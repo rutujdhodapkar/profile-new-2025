@@ -1,0 +1,201 @@
+after 30 seconds to background show "animations\no signal.html"<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Section</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'BitmapFont';
+      src: url('BitmapFont.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      background: #000000 !important;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      position: relative;
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .skills-container {
+      width: 100vw;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      background: #000;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      padding-top: 48px;
+      box-sizing: border-box;
+    }
+    .skill-bar-row {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .skill-label {
+      display: inline-block;
+      width: 120px;
+      color: #fff;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      font-family: 'BitmapFont', Arial, sans-serif;
+    }
+    .skill-circles-bg {
+      display: flex;
+      align-items: center;
+      margin-left: 8px;
+      gap: 6px;
+      height: 22px;
+      min-width: 120px;
+    }
+    .skill-circle {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #222;
+      border: 2px solid #222;
+      display: inline-block;
+      transition: background 0.3s, border 0.3s;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .skill-circle.filled {
+      background: #fff;
+      border: 2px solid #fff;
+    }
+    .skill-circles-bg:hover .skill-circle.filled {
+      background: #d8d8d8;
+      border: 2px solid #d8d8d8;
+    }
+    .skill-bar-percent {
+      position: relative;
+      z-index: 2;
+      padding-left: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'BitmapFont', Arial, sans-serif;
+      min-width: 38px;
+      text-align: right;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 32px;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-family: 'Krona One', Arial, sans-serif;
+      font-size: 2.8rem !important;
+    }
+    @media (max-width: 1200px), (max-width: 900px), (max-width: 700px), (max-width: 500px) {
+      h2 {
+        font-size: 2.8rem !important;
+      }
+    }
+    .number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 220px;
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 2px #ffffff;
+      opacity: 0.3;
+      position: absolute;
+      left: 0;
+      z-index: 10;
+      top: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
+  </style>
+  <script>
+    // Utility function to check if any column data is accessible in CSV
+    function hasAnyColumnData(csvText) {
+      // Split into lines, skip empty lines
+      const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) return false; // No data rows
+      // Check if at least one data row has any non-empty column
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        if (cols.some(col => col.trim().length > 0)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('data.csv')
+        .then(function(response) {
+          if (!response.ok) throw new Error('File not accessible');
+          return response.text();
+        })
+        .then(function(csvText) {
+          if (!hasAnyColumnData(csvText)) {
+            window.location.href = 'error.html';
+          }
+          // If accessible and has data, render skills as normal
+          var totalCircles = 20;
+          document.querySelectorAll('.skill-circles-bg').forEach(function(bg) {
+            var percent = parseInt(bg.getAttribute('data-percent'), 10) || 0;
+            var filledCount = Math.round((percent / 100) * totalCircles);
+            bg.innerHTML = '';
+            for (var i = 0; i < totalCircles; i++) {
+              var circle = document.createElement('span');
+              circle.className = 'skill-circle' + (i < filledCount ? ' filled' : '');
+              bg.appendChild(circle);
+            }
+          });
+        })
+        .catch(function() {
+          window.location.href = 'error.html';
+        });
+    });
+  </script>
+</head>
+<body>
+  <div class="skills-container">
+    <h2>Programming Languages I use most</h2>
+    <div class="skill-bar-row">
+      <span class="skill-label">Python</span>
+      <div class="skill-circles-bg" data-percent="50"></div>
+      <span class="skill-bar-percent">50%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">Java</span>
+      <div class="skill-circles-bg" data-percent="15"></div>
+      <span class="skill-bar-percent">15%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">R</span>
+      <div class="skill-circles-bg" data-percent="11"></div>
+      <span class="skill-bar-percent">11%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">Node.js</span>
+      <div class="skill-circles-bg" data-percent="10"></div>
+      <span class="skill-bar-percent">10%</span>
+    </div>
+    <div class="skill-bar-row">
+      <span class="skill-label">JavaScript</span>
+      <div class="skill-circles-bg" data-percent="14"></div>
+      <span class="skill-bar-percent">14%</span>
+    </div>
+  </div>
+  <div class="number">03</div>
+</body>

@@ -1,0 +1,154 @@
+<style>
+  body {
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #curveBtn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    font-size: 1.35rem; /* increased from 1.05rem */
+    font-family: 'Doto', monospace, 'Courier New', Courier, monospace;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    transition: 
+      width 0.8s cubic-bezier(.4,1.2,.6,1), 
+      height 0.8s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 0.8s cubic-bezier(.4,1.2,.6,1),
+      font-size 0.8s,
+      background 0.8s,
+      color 0.8s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+    outline: none;
+  }
+  #curveBtn.stage2 {
+    width: 220px;
+    height: 60px;
+    border-radius: 40px;
+    font-size: 1.15rem; /* increased from 0.95rem */
+    background: #000000;
+    color: #ffffff;
+    font-family: 'Doto', monospace, 'Courier New', Courier, monospace;
+    transition: 
+      width 0.8s cubic-bezier(.4,1.2,.6,1), 
+      height 0.8s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 0.8s cubic-bezier(.4,1.2,.6,1),
+      font-size 0.8s,
+      background 0.8s,
+      color 0.8s;
+  }
+  #curveBtn.fullscreen {
+    width: 3000px;
+    height: 3000px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    font-size: 1.7rem; /* increased from 1.3rem */
+    background: #000000;
+    color: #ffffff;
+    font-family: 'Doto', monospace, 'Courier New', Courier, monospace;
+    transition: 
+      width 1.2s cubic-bezier(.4,1.2,.6,1), 
+      height 1.2s cubic-bezier(.4,1.2,.6,1), 
+      border-radius 1.2s cubic-bezier(.4,1.2,.6,1),
+      font-size 1.2s,
+      background 1.2s,
+      color 1.2s;
+  }
+  #curveBtn .fade-text {
+    opacity: 0;
+    transition: opacity 0.4s;
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    font-family: 'Doto', monospace, 'Courier New', Courier, monospace;
+    font-size: 1.2em; /* make text inside button a bit bigger */
+  }
+  #curveBtn .fade-text.visible {
+    opacity: 1;
+    transition: opacity 0.4s;
+  }
+</style>
+<!-- You may want to include the Doto font from Google Fonts or local, e.g.: -->
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700&display=swap" rel="stylesheet">
+<button id="curveBtn">
+  <span class="fade-text visible" id="loadingText"></span>
+  <span class="fade-text" id="stageText"></span>
+  <span class="fade-text" id="welcomeText"></span>
+</button>
+<script>
+  var btn = document.getElementById('curveBtn');
+  var loadingText = document.getElementById('loadingText');
+  var stageText = document.getElementById('stageText');
+  var welcomeText = document.getElementById('welcomeText');
+
+  loadingText.textContent = '';
+  stageText.textContent = 'Loading...';
+  welcomeText.textContent = 'Welcome';
+
+  function showText(show, hide1, hide2) {
+    show.classList.add('visible');
+    hide1.classList.remove('visible');
+    hide2.classList.remove('visible');
+  }
+
+  showText(loadingText, stageText, welcomeText);
+
+  setTimeout(function() {
+    btn.classList.add('stage2');
+    showText(stageText, loadingText, welcomeText);
+  }, 1200);
+
+  setTimeout(function() {
+    btn.classList.remove('stage2');
+    btn.classList.add('fullscreen');
+    showText(welcomeText, loadingText, stageText);
+
+    setTimeout(function() {
+      window.location.href = "Main.html";
+    }, 5000);
+
+  }, 3500);
+
+  // Optional: blur overlay animation for transition
+  var blurOverlay = document.createElement('div');
+  blurOverlay.style.position = 'fixed';
+  blurOverlay.style.left = '0';
+  blurOverlay.style.top = '0';
+  blurOverlay.style.width = '100vw';
+  blurOverlay.style.height = '100vh';
+  blurOverlay.style.background = '#000';
+  blurOverlay.style.opacity = '0';
+  blurOverlay.style.zIndex = '99999';
+  blurOverlay.style.pointerEvents = 'none';
+  blurOverlay.style.transition = 'opacity 0.7s cubic-bezier(.4,1.2,.6,1)';
+  blurOverlay.style.backdropFilter = 'blur(32px)';
+  document.body.appendChild(blurOverlay);
+
+  setTimeout(function() {
+    blurOverlay.style.opacity = '1';
+    setTimeout(function() {
+      window.location.href = "Main.html";
+    }, 700);
+  }, 5000);
+</script>

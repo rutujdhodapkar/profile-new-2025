@@ -1,0 +1,107 @@
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #000000;
+  }
+  .signal-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.12;
+    box-shadow: none;
+    z-index: 1;
+  }
+  .signal-dot.on {
+    opacity: 0.85;
+    background: #fff;
+  }
+</style>
+<script>
+  // Slightly denser dots: decrease spacing
+  const SPACING_X = 13;
+  const SPACING_Y = 13;
+  const DOT_SIZE = 10;
+
+  let signalDots = [];
+  let cols = 0, rows = 0;
+
+  function placeGridDots() {
+    // Remove old dots
+    for (let i = 0; i < signalDots.length; i++) {
+      signalDots[i].remove();
+    }
+    signalDots = [];
+
+    // Calculate grid size based on screen size and fixed spacing
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    cols = Math.floor((width - DOT_SIZE) / SPACING_X) + 1;
+    rows = Math.floor((height - DOT_SIZE) / SPACING_Y) + 1;
+
+    // Center the grid
+    const gridWidth = (cols - 1) * SPACING_X + DOT_SIZE;
+    const gridHeight = (rows - 1) * SPACING_Y + DOT_SIZE;
+    const offsetX = Math.max(0, (width - gridWidth) / 2);
+    const offsetY = Math.max(0, (height - gridHeight) / 2);
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = offsetX + col * SPACING_X;
+        const y = offsetY + row * SPACING_Y;
+        const dot = document.createElement('div');
+        dot.className = 'signal-dot';
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.style.width = DOT_SIZE + 'px';
+        dot.style.height = DOT_SIZE + 'px';
+        document.body.appendChild(dot);
+        signalDots.push(dot);
+      }
+    }
+  }
+
+  // Always keep 35% of dots "on" (white), randomly chosen, and animate the pattern
+  function animateNoSignal() {
+    if (!signalDots.length) return;
+
+    const total = signalDots.length;
+    const onCount = Math.floor(total * 0.35);
+
+    // Create an array of indices and shuffle it
+    const indices = Array.from({length: total}, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+
+    // Set first onCount dots to "on", rest to "off"
+    for (let i = 0; i < total; i++) {
+      if (i < onCount) {
+        signalDots[indices[i]].classList.add('on');
+        signalDots[indices[i]].style.opacity = 0.85;
+      } else {
+        signalDots[indices[i]].classList.remove('on');
+        signalDots[indices[i]].style.opacity = 0.12;
+      }
+    }
+
+    // Lower FPS for hardware friendliness (10-14 FPS)
+    setTimeout(animateNoSignal, 1000 / (10 + Math.random() * 4));
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    placeGridDots();
+    animateNoSignal();
+  });
+
+  window.addEventListener('resize', () => {
+    placeGridDots();
+    animateNoSignal();
+  });
+</script>
